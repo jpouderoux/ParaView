@@ -73,6 +73,7 @@ public:
   /// \li \c ColorOpacityEditor : pqColorOpacityEditorWidget
   /// \li \c CubeAxes : pqCubeAxesPropertyWidget
   /// \li \c FontEditor : pqFontPropertyWidget
+  /// \li \c SeriesEditor : pqSeriesEditorPropertyWidget
   virtual pqPropertyWidget* createWidgetForPropertyGroup(
     vtkSMProxy *proxy, vtkSMPropertyGroup *group);
 
