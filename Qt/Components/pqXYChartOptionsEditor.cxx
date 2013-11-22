@@ -54,7 +54,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "pqPropertyManager.h"
 #include "pqSignalAdaptors.h"
 #include "pqSMAdaptor.h"
+#include "pqXYBagChartView.h"
 #include "pqXYBarChartView.h"
+#include "pqXYBoxChartView.h"
 #include "pqXYChartView.h"
 
 #include "vtkAxis.h"
@@ -74,7 +76,9 @@ public:
     {
     INVALID,
     LINE,
-    BAR
+    BAR,
+    BOX,
+    BAG
     };
 
   ChartType Type;
@@ -338,6 +342,10 @@ void pqXYChartOptionsEditor::setView(pqView* view)
     qobject_cast<pqComparativeXYBarChartView*>(view))
     {
     this->Internal->Type = pqInternal::BAR;
+    }
+  else if (qobject_cast<pqXYBoxChartView*>(view))
+    {
+    this->Internal->Type = pqInternal::BOX;
     }
   else
     {
@@ -1240,7 +1248,7 @@ void pqXYChartOptionsEditor::loadAxisLayoutPage()
   pqXYChartOptionsEditorAxis *axis =
           this->Internal->Form->AxisData[this->Internal->Form->AxisIndex];
   this->Internal->Form->UseLogScale->setChecked(axis->UseLogScale);
-  
+
   if (axis->UseFixedRange)
     {
     this->Internal->Form->UseFixedRange->setChecked(true);

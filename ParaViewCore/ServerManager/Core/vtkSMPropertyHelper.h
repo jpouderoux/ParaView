@@ -83,7 +83,7 @@ class vtkSMStringVectorProperty;
 class vtkSMProxyProperty;
 class vtkSMInputProperty;
 
-class VTKPVSERVERMANAGERCORE_EXPORT vtkSMPropertyHelper 
+class VTKPVSERVERMANAGERCORE_EXPORT vtkSMPropertyHelper
 {
 public:
   // Description:
@@ -176,7 +176,7 @@ public:
   const char* GetAsString(unsigned int index = 0);
 
   // Description:
-  // Set/Get methods for vtkSMProxyProperty or vtkSMInputProperty. 
+  // Set/Get methods for vtkSMProxyProperty or vtkSMInputProperty.
   // Calling these methods on any other type of property will raise errors.
   // The option \c outputport(s) argument is used only for vtkSMInputProperty.
   void Set(vtkSMProxy* value, unsigned int outputport=0)
@@ -187,7 +187,7 @@ public:
   void Remove(vtkSMProxy* value);
   vtkSMProxy* GetAsProxy(unsigned int index=0);
   unsigned int GetOutputPort(unsigned int index=0);
- 
+
   // Description:
   // This API is useful for setting values on vtkSMStringVectorProperty that is
   // used for status where the first value is the name of the array (for
@@ -209,6 +209,13 @@ public:
   void SetStatus(const char* key, const char* value);
   const char* GetStatus(const char* key, const char* default_value);
 
+  // Description:
+  // This API is useful for setting values on vtkSMStringVectorProperty that is
+  // used for status where the first value is the name of the array (for
+  // example) and the second value is it's status (as a string array)
+  void SetStatus(const char* key, const char *values[], int num_values);
+  bool GetStatus(const char* key, const char *values[], int num_values);
+
 protected:
   void setUseUnchecked(bool useUnchecked) { this->UseUnchecked = useUnchecked; }
 
@@ -224,7 +231,7 @@ private:
   template<typename T> void SetProperty(unsigned int index, T value);
   template<typename T> void SetPropertyArray(const T *values, unsigned int count);
   void SetPropertyArrayIdType(const vtkIdType *values, unsigned int count);
- 
+
   enum PType {
     INT,
     DOUBLE,

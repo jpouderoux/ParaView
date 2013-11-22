@@ -442,3 +442,132 @@ int pqPlotSettingsModel::getSeriesMarkerStyle(int row) const
   return vtkSMPropertyHelper(this->Implementation->RepresentationProxy,
     "SeriesMarkerStyle").GetStatus(this->getSeriesName(row), 1);
 }
+
+//-----------------------------------------------------------------------------
+void pqPlotSettingsModel::setSeriesQuartiles(int row,
+                                           int q0, int q1, int q3, int q4)
+{
+  if (row >= 0 && row < this->rowCount(QModelIndex()))
+    {
+    BEGIN_UNDO_SET("Change Series Quartiles");
+    const char *values[4];
+    values[0] = this->getSeriesName(q0);
+    values[1] = this->getSeriesName(q1);
+    values[2] = this->getSeriesName(q3);
+    values[3] = this->getSeriesName(q4);
+
+    vtkSMPropertyHelper(this->Implementation->RepresentationProxy,
+      "SeriesQuartiles").SetStatus(this->getSeriesName(row), values, 4);
+    this->Implementation->RepresentationProxy->UpdateVTKObjects();
+    emit this->redrawChart();
+    END_UNDO_SET();
+    }
+}
+
+//-----------------------------------------------------------------------------
+void pqPlotSettingsModel::setSeriesQuartiles(const char *row,
+                                             const char *q0,
+                                             const char *q1,
+                                             const char *q3,
+                                             const char *q4)
+{
+  if (row && q0 && q1 && q3 && q4)
+    {
+    BEGIN_UNDO_SET("Change Series Quartiles");
+    const char *values[4] = { q0, q1, q3, q4 };
+
+    vtkSMPropertyHelper(this->Implementation->RepresentationProxy,
+      "SeriesQuartiles").SetStatus(row, values, 4);
+    this->Implementation->RepresentationProxy->UpdateVTKObjects();
+    emit this->redrawChart();
+    END_UNDO_SET();
+    }
+}
+
+//-----------------------------------------------------------------------------
+QVector<QString> pqPlotSettingsModel::getSeriesQuartiles(int row) const
+{
+  const char *values[4];
+  QVector<QString> result(4);
+
+  if (vtkSMPropertyHelper(this->Implementation->RepresentationProxy,
+    "SeriesQuartiles").GetStatus(this->getSeriesName(row), values, 4))
+    {
+    this->Implementation->RepresentationProxy->UpdateVTKObjects();
+    for (int i = 0; i < 4; ++i)
+      {
+      result[i] = values[i];
+      }
+    }
+  else
+    {
+    vtkSMPropertyHelper props(this->Implementation->RepresentationProxy,
+        "SeriesNamesInfo");
+    for (int i = 0; i < 4; i++)
+      {
+      result[i] = props.GetAsString(i);
+      }
+
+    for (int i = 0; i < props.GetNumberOfElements(); i++)
+      {
+      QString p = props.GetAsString(i);
+      if (p == "q0")
+        {
+        result[0] = p;
+        }
+      else if (p == "q1")
+        {
+        result[1] = p;
+        }
+      else if (p == "q3")
+        {
+        result[2] = p;
+        }
+      else if (p == "q4")
+        {
+        result[3] = p;
+        }
+      }
+    }
+  return result;
+}
+
+//-----------------------------------------------------------------------------
+void pqPlotSettingsModel::setSeriesDensity(int row, int density)
+{
+  if (row >= 0 && row < this->rowCount(QModelIndex()))
+    {
+    BEGIN_UNDO_SET("Change Series Density");
+    const char *values = this->getSeriesName(density);
+
+    vtkSMPropertyHelper(this->Implementation->RepresentationProxy,
+      "SeriesDensity").SetStatus(this->getSeriesName(row), values);
+    this->Implementation->RepresentationProxy->UpdateVTKObjects();
+    emit this->redrawChart();
+    END_UNDO_SET();
+    }
+}
+
+//-----------------------------------------------------------------------------
+void pqPlotSettingsModel::setSeriesDensity(const char *name, const char *density)
+{
+  if (name && density)
+    {
+    BEGIN_UNDO_SET("Change Series Density");
+
+    vtkSMPropertyHelper(this->Implementation->RepresentationProxy,
+      "SeriesDensity").SetStatus(name, density);
+    this->Implementation->RepresentationProxy->UpdateVTKObjects();
+    emit this->redrawChart();
+    END_UNDO_SET();
+    }
+}
+
+//-----------------------------------------------------------------------------
+QString pqPlotSettingsModel::getSeriesDensity(int row) const
+{
+  QString name = this->getSeriesName(row);
+  return vtkSMPropertyHelper(this->Implementation->RepresentationProxy,
+    "SeriesDensity").GetStatus(name.toStdString().c_str(),
+    name.toStdString().c_str()); // name by default.
+}

@@ -114,6 +114,7 @@ set(Module_SRCS
   vtkScatterPlotMapper.cxx
   vtkScatterPlotPainter.cxx
   vtkSciVizStatistics.cxx
+  vtkSciVizHighestDensityRegionsStats.cxx
   vtkSpyPlotBlock.cxx
   vtkSpyPlotBlockIterator.cxx
   vtkSpyPlotHistoryReader.cxx

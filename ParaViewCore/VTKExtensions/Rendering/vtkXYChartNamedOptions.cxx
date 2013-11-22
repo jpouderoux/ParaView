@@ -18,6 +18,8 @@
 #include "vtkStringList.h"
 #include "vtkChartXY.h"
 #include "vtkPlot.h"
+#include "vtkPlotBag.h"
+#include "vtkPlotBox.h"
 #include "vtkPlotLine.h"
 #include "vtkAxis.h"
 #include "vtkPen.h"
@@ -49,6 +51,10 @@ public:
   int Visible;
   int Corner;
   double Color[3];
+  // Specific for BoxPlot: each column can be seen as the median
+  // we store reference on it associated quartiles.
+  vtkStdString Q0, Q1, Q3, Q4;
+  vtkStdString Density;
 
   PlotInfo()
     {
@@ -78,6 +84,11 @@ public:
     this->Plots = p.Plots;
     this->Tables = p.Tables;
     this->Corner = p.Corner;
+    this->Q0 = p.Q0;
+    this->Q1 = p.Q1;
+    this->Q3 = p.Q3;
+    this->Q4 = p.Q4;
+    this->Density = p.Density;
     }
 };
 
@@ -283,6 +294,19 @@ void vtkXYChartNamedOptions::RefreshPlots()
           plotInfo.VisibilityInitialized = true;
           plotInfo.Visible = defaultVisible;
           }
+
+        // In case of box plot, we need to set correctly q0, q1, q3, q4
+        if (table->GetNumberOfColumns() > 5)
+          {
+          plotInfo.Q0 = table->GetColumnName(1);
+          plotInfo.Q1 = table->GetColumnName(2);
+          plotInfo.Q3 = table->GetColumnName(4);
+          plotInfo.Q4 = table->GetColumnName(5);
+          }
+        if (table->GetNumberOfColumns() > 2)
+          {
+          plotInfo.Density = table->GetColumnName(2);
+          }
         // Add the PlotInfo to the new collection
         newMap[fullSerieName.str()] = plotInfo;
         }
@@ -345,21 +369,39 @@ void vtkXYChartNamedOptions::SetPlotVisibilityInternal(PlotInfo& plotInfo,
         plot->GetPen()->SetLineType(plotInfo.LineStyle);
         plot->SetColor(plotInfo.Color[0], plotInfo.Color[1], plotInfo.Color[2]);
         chartxy->SetPlotCorner(plot, plotInfo.Corner);
-        // Must downcast to set the marker style...
-        vtkPlotLine *line = vtkPlotLine::SafeDownCast(plot);
-        if (line)
-          {
-          line->SetMarkerStyle(plotInfo.MarkerStyle);
 
-          // the vtkValidPointMask array is used by some filters (like plot
-          // over line) to indicate invalid points. this instructs the line
-          // plot to not render those points
-          line->SetValidPointMaskName("vtkValidPointMask");
+        // Must downcast to set all columns
+        if (vtkPlotBox *box = vtkPlotBox::SafeDownCast(plot))
+          {
+          box->SetUseIndexForXSeries(this->Internals->UseIndexForXAxis);
+          box->SetInputData(plotInfo.Tables[i],
+            this->Internals->XSeriesName.c_str(),
+            plotInfo.Q0, plotInfo.Q1, seriesName, plotInfo.Q3, plotInfo.Q4);
           }
-        plot->SetUseIndexForXSeries(this->Internals->UseIndexForXAxis);
-        plot->SetInputData(plotInfo.Tables[i],
-                           this->Internals->XSeriesName.c_str(),
-                           seriesName);
+        else if (vtkPlotBag *density = vtkPlotBag::SafeDownCast(plot))
+          {
+          density->SetUseIndexForXSeries(this->Internals->UseIndexForXAxis);
+          density->SetInputData(plotInfo.Tables[i],
+            this->Internals->XSeriesName.c_str(),
+            seriesName, plotInfo.Density);
+          }
+        else
+          {
+          // Must downcast to set the marker style...
+          if (vtkPlotLine *line = vtkPlotLine::SafeDownCast(plot))
+            {
+            line->SetMarkerStyle(plotInfo.MarkerStyle);
+
+            // the vtkValidPointMask array is used by some filters (like plot
+            // over line) to indicate invalid points. this instructs the line
+            // plot to not render those points
+            line->SetValidPointMaskName("vtkValidPointMask");
+            }
+          plot->SetUseIndexForXSeries(this->Internals->UseIndexForXAxis);
+          plot->SetInputData(plotInfo.Tables[i],
+            this->Internals->XSeriesName.c_str(),
+            seriesName);
+          }
         }
       }
     }
@@ -458,6 +500,53 @@ void vtkXYChartNamedOptions::SetAxisCorner(const char* name, int value)
         {
         chart->SetPlotCorner(plotInfo.Plots[i], value);
         }
+      }
+    }
+}
+
+//----------------------------------------------------------------------------
+void vtkXYChartNamedOptions::SetQuartiles(const char *median,
+  const char *q0, const char *q1, const char *q3, const char *q4)
+{
+  PlotInfo& plotInfo = this->GetPlotInfo(median);
+  plotInfo.Q0 = q0;
+  plotInfo.Q1 = q1;
+  plotInfo.Q3 = q3;
+  plotInfo.Q4 = q4;
+
+  // If the quartiles column is changed, the range will changes
+  vtkPlotBox *box = NULL;
+  for (size_t i = 0; i < plotInfo.Plots.size(); i++)
+    {
+    box = vtkPlotBox::SafeDownCast(plotInfo.Plots[i]);
+    if (box)
+      {
+      box->SetInputArray(1, q0);
+      box->SetInputArray(2, q1);
+      box->SetInputArray(3, median);
+      box->SetInputArray(4, q3);
+      box->SetInputArray(5, q4);
+      }
+    }
+  if (this->Chart)
+    {
+    this->Chart->RecalculateBounds();
+    }
+}
+
+//----------------------------------------------------------------------------
+void vtkXYChartNamedOptions::SetDensity(const char *name, const char *density)
+{
+  PlotInfo& plotInfo = this->GetPlotInfo(name);
+  plotInfo.Density = density;
+
+  for (size_t i = 0; i < plotInfo.Plots.size(); i++)
+    {
+    vtkPlotBag* currentBag = vtkPlotBag::SafeDownCast(plotInfo.Plots[i]);
+    if (currentBag)
+      {
+      currentBag->SetInputArray(1, name);
+      currentBag->SetInputArray(2, density);
       }
     }
 }

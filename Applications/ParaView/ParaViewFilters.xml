@@ -41,6 +41,8 @@
     <Proxy group="filters" name="PlotOnIntersectionCurves" omit_from_toolbar="1"/>
     <Proxy group="filters" name="ProgrammableFilter"
             icon=":/pqWidgets/Icons/pqProgrammableFilter24.png" omit_from_toolbar="1"/>
+    <Proxy group="filters" name="ComputeQuartiles"
+            icon=":/pqWidgets/Icons/pqBoxChart16.png" omit_from_toolbar="1"/>
   </Category>
 
   <Category name="Statistics" menu_label="&amp;Statistics">
@@ -48,7 +50,9 @@
     <Proxy group="filters" name="DescriptiveStatistics"/>
     <Proxy group="filters" name="KMeans"/>
     <Proxy group="filters" name="MulticorrelativeStatistics"/>
+    <Proxy group="filters" name="OrderStatistics"/>
     <Proxy group="filters" name="PCAStatistics"/>
+    <Proxy group="filters" name="HighestDensityRegionsStatistics"/>
   </Category>
 
   <Category name="Temporal" menu_label="&amp;Temporal">

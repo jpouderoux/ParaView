@@ -926,11 +926,29 @@
     <!-- ================================================================== -->
     <ContextViewProxy base_proxygroup="views"
                       base_proxyname="XYChartViewBase"
+                      class="vtkPVBagChartView"
+                      name="XYBagChartView"
+                      processes="client|renderserver|dataserver"
+                      representation_name="XYBagChartRepresentation">
+      <Documentation>This is the proxy for bag chart view.</Documentation>
+    </ContextViewProxy>
+    <!-- ================================================================== -->
+    <ContextViewProxy base_proxygroup="views"
+                      base_proxyname="XYChartViewBase"
                       class="vtkPVBarChartView"
                       name="XYBarChartView"
                       processes="client|renderserver|dataserver"
                       representation_name="XYBarChartRepresentation">
       <Documentation>This is the proxy for bar chart view.</Documentation>
+    </ContextViewProxy>
+    <!-- ================================================================== -->
+    <ContextViewProxy base_proxygroup="views"
+                      base_proxyname="XYChartViewBase"
+                      class="vtkPVBoxChartView"
+                      name="XYBoxChartView"
+                      processes="client|renderserver|dataserver"
+                      representation_name="XYBoxChartRepresentation">
+      <Documentation>This is the proxy for box chart view.</Documentation>
     </ContextViewProxy>
     <!-- ================================================================== -->
     <ContextViewProxy base_proxygroup="views"
@@ -1242,11 +1260,11 @@
             <Property name="NonlinearSubdivisionLevel"
                       panel_visibility="advanced" />
             <Property name="BlockVisibility"
-	                    panel_visibility="never" />
+                      panel_visibility="never" />
             <Property name="BlockColor"
-	                    panel_visibility="never" />
+                      panel_visibility="never" />
             <Property name="BlockOpacity"
-	                    panel_visibility="never" />
+                      panel_visibility="never" />
           </PropertyGroup>
         </ExposedProperties>
       </SubProxy>
@@ -1389,17 +1407,17 @@
           <Property exposed_name="SelectionRepresentation" name="Representation" panel_visibility="never" />
           <Property exposed_name="SelectionPointSize" name="PointSize" panel_visibility="never" />
           <Property exposed_name="SelectionLineWidth" name="LineWidth" panel_visibility="never" />
-	  <Property exposed_name="SelectionCellLabelVisibility" name="CellLabelVisibility" panel_visibility="never"/>
+    <Property exposed_name="SelectionCellLabelVisibility" name="CellLabelVisibility" panel_visibility="never"/>
           <PropertyGroup label="Cell Label Font" panel_visibility="never" panel_widget="FontEditor">
-	    <Property exposed_name="SelectionCellLabelBold" name="CellLabelBold" function="Bold"/>
-	    <Property exposed_name="SelectionCellLabelColor" name="CellLabelColor" function="Color"/>
-	    <Property exposed_name="SelectionCellLabelFontFamily" name="CellLabelFontFamily" function="Family"/>
-	    <Property exposed_name="SelectionCellLabelFontSize" name="CellLabelFontSize" function="Size"/>
-	    <Property exposed_name="SelectionCellLabelFormat" name="CellLabelFormat" />
-	    <Property exposed_name="SelectionCellLabelItalic" name="CellLabelItalic" function="Italics"/>
-	    <Property exposed_name="SelectionCellLabelJustification" name="CellLabelJustification" />
-	    <Property exposed_name="SelectionCellLabelOpacity" name="CellLabelOpacity" function="Opacity"/>
-	    <Property exposed_name="SelectionCellLabelShadow" name="CellLabelShadow" function="Shadow"/>
+      <Property exposed_name="SelectionCellLabelBold" name="CellLabelBold" function="Bold"/>
+      <Property exposed_name="SelectionCellLabelColor" name="CellLabelColor" function="Color"/>
+      <Property exposed_name="SelectionCellLabelFontFamily" name="CellLabelFontFamily" function="Family"/>
+      <Property exposed_name="SelectionCellLabelFontSize" name="CellLabelFontSize" function="Size"/>
+      <Property exposed_name="SelectionCellLabelFormat" name="CellLabelFormat" />
+      <Property exposed_name="SelectionCellLabelItalic" name="CellLabelItalic" function="Italics"/>
+      <Property exposed_name="SelectionCellLabelJustification" name="CellLabelJustification" />
+      <Property exposed_name="SelectionCellLabelOpacity" name="CellLabelOpacity" function="Opacity"/>
+      <Property exposed_name="SelectionCellLabelShadow" name="CellLabelShadow" function="Shadow"/>
           </PropertyGroup>
           <Property exposed_name="SelectionPointLabelVisibility" name="PointLabelVisibility" panel_visibility="never"/>
           <PropertyGroup label="Point Label Font" panel_visibility="never" panel_widget="FontEditor">
@@ -3593,11 +3611,10 @@
       <!-- End of MoleculeRepresentation -->
     </RepresentationProxy>
     <!-- =================================================================== -->
-    <ChartRepresentationProxy base_proxygroup="representations"
-                              class="vtkXYChartRepresentation"
-                              name="XYChartRepresentationBase"
-                              processes="client|dataserver|renderserver">
-      <Documentation>Representation used by XYChartView.</Documentation>
+    <Proxy class="--not-used--"
+           name="XYChartRepresentationBaseBase">
+      <Documentation> API for series with XY series without API for the
+      Y series </Documentation>
       <InputProperty command="SetInputConnection"
                      name="Input">
         <Documentation>Data input for the representation.</Documentation>
@@ -3655,7 +3672,7 @@
       <IntVectorProperty clean_command="ResetCompositeDataSetIndices"
                          command="AddCompositeDataSetIndex"
                          default_values="1"
-			 number_of_elements="1"
+                         number_of_elements="1"
                          name="CompositeDataSetIndex"
                          number_of_elements_per_command="1"
                          panel_visibility="default"
@@ -3704,6 +3721,28 @@
         otherwise the array identified by XArrayName will be
         used.</Documentation>
       </IntVectorProperty>
+
+      <SubProxy>
+        <!--
+          SelectionRepresentation proxy is used to convey the selection to view.
+          We keep this separate as subproxy so that when the selection is
+          modified, we don't have to update the representation as well, we can
+          only update the SelectionRepresentation.
+        -->
+        <RepresentationProxy name="SelectionRepresentation"
+               class="vtkChartSelectionRepresentation"
+               processes="client|dataserver|renderserver">
+          <InputProperty command="SetInputConnection"
+                         name="SelectionInput"/>
+        </RepresentationProxy>
+      </SubProxy>
+    </Proxy>
+    <ChartRepresentationProxy base_proxygroup="representations"
+                              base_proxyname="XYChartRepresentationBaseBase"
+                              class="vtkXYChartRepresentation"
+                              name="XYChartRepresentationBase"
+                              processes="client|dataserver|renderserver">
+      <Documentation>Representation used by XYChartView.</Documentation>
       <SubProxy>
         <Proxy name="PlotOptions"
                proxygroup="options"
@@ -3738,22 +3777,7 @@
           <Property exposed_name="SeriesPlotCornerInfo"
                     name="PlotCornerInfo" />
         </ExposedProperties>
-      </SubProxy>
-
-      <SubProxy>
-        <!--
-          SelectionRepresentation proxy is used to convey the selection to view.
-          We keep this separate as subproxy so that when the selection is
-          modified, we don't have to update the representation as well, we can
-          only update the SelectionRepresentation.
-        -->
-        <RepresentationProxy name="SelectionRepresentation"
-               class="vtkChartSelectionRepresentation"
-               processes="client|dataserver|renderserver">
-          <InputProperty command="SetInputConnection"
-                         name="SelectionInput"/>
-        </RepresentationProxy>
-      </SubProxy>
+        </SubProxy>
       <!-- End of XYChartRepresentationBase -->
     </ChartRepresentationProxy>
 
@@ -4114,6 +4138,109 @@
                             default_values="Bar"
                             name="ChartType"
                             number_of_elements="1"></StringVectorProperty>
+    </ChartRepresentationProxy>
+    <!-- New representation for ContextView based charts. -->
+    <ChartRepresentationProxy base_proxygroup="representations"
+                              base_proxyname="XYChartRepresentationBaseBase"
+                              class="vtkXYChartRepresentation"
+                              name="XYBagChartRepresentation"
+                              processes="client|dataserver|renderserver">
+      <Documentation>Representation used by XYBagChartView.</Documentation>
+      <StringVectorProperty command="SetChartType"
+                            default_values="Bag"
+                            name="ChartType"
+                            number_of_elements="1"></StringVectorProperty>
+      <SubProxy>
+        <Proxy name="PlotOptions"
+               proxygroup="options"
+               proxyname="XYBagPlotOptions"></Proxy>
+        <ExposedProperties>
+          <Property exposed_name="SeriesDensity"
+                    name="Density" />
+          <Property exposed_name="SeriesVisibility"
+                    name="Visibility" />
+          <Property exposed_name="SeriesColor"
+                    name="Color" />
+          <Property exposed_name="SeriesLineThickness"
+                    name="LineThickness" />
+          <Property exposed_name="SeriesLineStyle"
+                    name="LineStyle" />
+          <Property exposed_name="SeriesLabel"
+                    name="Label" />
+          <Property exposed_name="SeriesMarkerStyle"
+                    name="MarkerStyle" />
+          <Property exposed_name="SeriesPlotCorner"
+                    name="PlotCorner" />
+          <Property exposed_name="SeriesBaginfo"
+                    name="BagInfo" />
+          <Property exposed_name="SeriesVisibilityInfo"
+                    name="VisibilityInfo" />
+          <Property exposed_name="SeriesColorInfo"
+                    name="ColorInfo" />
+          <Property exposed_name="SeriesLineThicknessInfo"
+                    name="LineThicknessInfo" />
+          <Property exposed_name="SeriesLineStyleInfo"
+                    name="LineStyleInfo" />
+          <Property exposed_name="SeriesLabelInfo"
+                    name="LabelInfo" />
+          <Property exposed_name="SeriesMarkerStyleInfo"
+                    name="MarkerStyleInfo" />
+          <Property exposed_name="SeriesPlotCornerInfo"
+                    name="PlotCornerInfo" />
+        </ExposedProperties>
+      </SubProxy>
+    </ChartRepresentationProxy>
+    <!-- =================================================================== -->
+    <!-- New representation for ContextView based charts. -->
+    <ChartRepresentationProxy base_proxygroup="representations"
+                              base_proxyname="XYChartRepresentationBaseBase"
+                              class="vtkXYChartRepresentation"
+                              name="XYBoxChartRepresentation"
+                              processes="client|dataserver|renderserver">
+      <Documentation>Representation used by XYBoxChartView.</Documentation>
+      <StringVectorProperty command="SetChartType"
+                            default_values="Box"
+                            name="ChartType"
+                            number_of_elements="1"></StringVectorProperty>
+      <SubProxy>
+        <Proxy name="PlotOptions"
+               proxygroup="options"
+               proxyname="XYBoxPlotOptions"></Proxy>
+        <ExposedProperties>
+          <Property exposed_name="SeriesQuartiles"
+                    name="Quartiles" />
+          <Property exposed_name="SeriesVisibility"
+                    name="Visibility" />
+          <Property exposed_name="SeriesColor"
+                    name="Color" />
+          <Property exposed_name="SeriesLineThickness"
+                    name="LineThickness" />
+          <Property exposed_name="SeriesLineStyle"
+                    name="LineStyle" />
+          <Property exposed_name="SeriesLabel"
+                    name="Label" />
+          <Property exposed_name="SeriesMarkerStyle"
+                    name="MarkerStyle" />
+          <Property exposed_name="SeriesPlotCorner"
+                    name="PlotCorner" />
+          <Property exposed_name="SeriesQuartilesinfo"
+                    name="QuartilesInfo" />
+          <Property exposed_name="SeriesVisibilityInfo"
+                    name="VisibilityInfo" />
+          <Property exposed_name="SeriesColorInfo"
+                    name="ColorInfo" />
+          <Property exposed_name="SeriesLineThicknessInfo"
+                    name="LineThicknessInfo" />
+          <Property exposed_name="SeriesLineStyleInfo"
+                    name="LineStyleInfo" />
+          <Property exposed_name="SeriesLabelInfo"
+                    name="LabelInfo" />
+          <Property exposed_name="SeriesMarkerStyleInfo"
+                    name="MarkerStyleInfo" />
+          <Property exposed_name="SeriesPlotCornerInfo"
+                    name="PlotCornerInfo" />
+        </ExposedProperties>
+      </SubProxy>
     </ChartRepresentationProxy>
     <!-- =================================================================== -->
     <SpreadSheetRepresentationProxy class="vtkSpreadSheetRepresentation"
@@ -4608,16 +4735,16 @@
         <Property exposed_name="SelectionPointSize" name="PointSize" panel_visibility="never" />
         <Property exposed_name="SelectionLineWidth" name="LineWidth" panel_visibility="never" />
         <PropertyGroup label="Cell Label Font" panel_visibility="never" panel_widget="FontEditor">
-	  <Property exposed_name="SelectionCellLabelBold" name="CellLabelBold" />
-	  <Property exposed_name="SelectionCellLabelColor" name="CellLabelColor" />
-	  <Property exposed_name="SelectionCellLabelFontFamily" name="CellLabelFontFamily" function="Family"/>
-	  <Property exposed_name="SelectionCellLabelFontSize" name="CellLabelFontSize" />
-	  <Property exposed_name="SelectionCellLabelFormat" name="CellLabelFormat" />
-	  <Property exposed_name="SelectionCellLabelItalic" name="CellLabelItalic" />
-	  <Property exposed_name="SelectionCellLabelJustification" name="CellLabelJustification" />
-	  <Property exposed_name="SelectionCellLabelOpacity" name="CellLabelOpacity" />
-	  <Property exposed_name="SelectionCellLabelShadow" name="CellLabelShadow" />
-	  <Property exposed_name="SelectionCellLabelVisibility" name="CellLabelVisibility" />
+    <Property exposed_name="SelectionCellLabelBold" name="CellLabelBold" />
+    <Property exposed_name="SelectionCellLabelColor" name="CellLabelColor" />
+    <Property exposed_name="SelectionCellLabelFontFamily" name="CellLabelFontFamily" function="Family"/>
+    <Property exposed_name="SelectionCellLabelFontSize" name="CellLabelFontSize" />
+    <Property exposed_name="SelectionCellLabelFormat" name="CellLabelFormat" />
+    <Property exposed_name="SelectionCellLabelItalic" name="CellLabelItalic" />
+    <Property exposed_name="SelectionCellLabelJustification" name="CellLabelJustification" />
+    <Property exposed_name="SelectionCellLabelOpacity" name="CellLabelOpacity" />
+    <Property exposed_name="SelectionCellLabelShadow" name="CellLabelShadow" />
+    <Property exposed_name="SelectionCellLabelVisibility" name="CellLabelVisibility" />
         </PropertyGroup>
         <PropertyGroup label="Point Label Font" panel_visibility="never" panel_widget="FontEditor">
           <Property exposed_name="SelectionPointLabelBold" name="PointLabelBold"/>

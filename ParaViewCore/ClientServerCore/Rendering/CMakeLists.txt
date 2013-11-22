@@ -50,7 +50,9 @@ set (Module_SRCS
   vtkMoleculeRepresentation.cxx
   vtkMPIMoveData.cxx
   vtkOutlineRepresentation.cxx
+  vtkPVBagChartView.cxx
   vtkPVBarChartView.cxx
+  vtkPVBoxChartView.cxx
   vtkPVCacheKeeper.cxx
   vtkPVCacheKeeperPipeline.cxx
   vtkPVCacheSizeInformation.cxx

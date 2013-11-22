@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>285</width>
-    <height>784</height>
+    <height>787</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -149,7 +149,55 @@
       <property name="spacing">
        <number>6</number>
       </property>
-      <item row="5" column="1">
+      <item row="8" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Line Color</string>
+        </property>
+       </widget>
+      </item>
+      <item row="11" column="1">
+       <widget class="QComboBox" name="MarkerStyleList">
+        <item>
+         <property name="text">
+          <string>None</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Cross</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Plus</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Square</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Circle</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Diamond</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="11" column="0">
+       <widget class="QLabel" name="MarkerStyleListLabel">
+        <property name="text">
+         <string>Marker Style</string>
+        </property>
+       </widget>
+      </item>
+      <item row="12" column="1">
        <widget class="QComboBox" name="AxisList">
         <property name="whatsThis">
          <string>Select the chart axes for the line series.</string>
@@ -176,7 +224,7 @@
         </item>
        </widget>
       </item>
-      <item row="3" column="1">
+      <item row="10" column="1">
        <widget class="QComboBox" name="StyleList">
         <property name="whatsThis">
          <string>Select the line style for the series.</string>
@@ -213,21 +261,21 @@
         </item>
        </widget>
       </item>
-      <item row="5" column="0">
+      <item row="12" column="0">
        <widget class="QLabel" name="AxisListLabel">
         <property name="text">
          <string>Chart Axes</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="0">
+      <item row="10" column="0">
        <widget class="QLabel" name="StyleListLabel">
         <property name="text">
          <string>Line Style</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item row="9" column="1">
        <widget class="QSpinBox" name="Thickness">
         <property name="whatsThis">
          <string>Enter the thickness for the line.</string>
@@ -243,14 +291,14 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
+      <item row="9" column="0">
        <widget class="QLabel" name="ThicknessLabel">
         <property name="text">
          <string>Line Thickness</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="1">
+      <item row="8" column="1">
        <widget class="pqColorChooserButton" name="ColorButton">
         <property name="whatsThis">
          <string>Press this button to choose a new color for the line.</string>
@@ -260,14 +308,7 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_2">
-        <property name="text">
-         <string>Line Color</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" colspan="2">
+      <item row="1" column="0" colspan="2">
        <widget class="pqTreeView" name="SeriesList">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
@@ -292,46 +333,41 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="MarkerStyleListLabel">
+      <item row="7" column="1">
+       <widget class="QComboBox" name="DensityArray"/>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="MedianLabel">
         <property name="text">
-         <string>Marker Style</string>
+         <string>Median</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="QComboBox" name="MarkerStyleList">
-        <item>
-         <property name="text">
-          <string>None</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Cross</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Plus</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Square</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Circle</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>Diamond</string>
-         </property>
-        </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="QuartilesLabel">
+        <property name="text">
+         <string>Quartiles</string>
+        </property>
        </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="DensityLabel">
+        <property name="text">
+         <string>Density</string>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0" colspan="2">
+       <widget class="QComboBox" name="Q4Array"/>
+      </item>
+      <item row="5" column="0" colspan="2">
+       <widget class="QComboBox" name="Q3Array"/>
+      </item>
+      <item row="4" column="0" colspan="2">
+       <widget class="QComboBox" name="Q1Array"/>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QComboBox" name="Q0Array"/>
       </item>
      </layout>
     </widget>

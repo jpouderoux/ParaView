@@ -43,7 +43,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "pqServer.h"
 #include "pqSpreadSheetView.h"
 #include "pqTextRepresentation.h"
+#include "pqXYBagChartView.h"
 #include "pqXYBarChartView.h"
+#include "pqXYBoxChartView.h"
 #include "pqXYChartView.h"
 #include "vtkSMComparativeViewProxy.h"
 #include "vtkSMContextViewProxy.h"
@@ -68,7 +70,9 @@ QStringList pqStandardViewModules::viewTypes() const
     pqRenderView::renderViewType() <<
     pqSpreadSheetView::spreadsheetViewType() <<
     pqXYChartView::XYChartViewType() <<
+    pqXYBagChartView::XYBagChartViewType() <<
     pqXYBarChartView::XYBarChartViewType() <<
+    pqXYBoxChartView::XYBoxChartViewType() <<
     pqComparativeRenderView::comparativeRenderViewType() <<
     pqComparativeXYChartView::chartViewType() <<
     pqComparativeXYBarChartView::chartViewType() <<
@@ -81,7 +85,9 @@ QStringList pqStandardViewModules::displayTypes() const
 {
   return QStringList()
     << "XYChartRepresentation"
+    << "XYBagChartRepresentation"
     << "XYBarChartRepresentation"
+    << "XYBoxChartRepresentation"
     << "TextSourceRepresentation"
     << "PlotMatrixRepresentation";
 }
@@ -112,9 +118,17 @@ QString pqStandardViewModules::viewTypeName(const QString& type) const
     {
     return pqXYChartView::XYChartViewTypeName();
     }
+  else if (type == pqXYBagChartView::XYBagChartViewType())
+    {
+    return pqXYBagChartView::XYBagChartViewTypeName();
+    }
   else if (type == pqXYBarChartView::XYBarChartViewType())
     {
     return pqXYBarChartView::XYBarChartViewTypeName();
+    }
+  else if (type == pqXYBoxChartView::XYBoxChartViewType())
+    {
+    return pqXYBoxChartView::XYBoxChartViewTypeName();
     }
   else if (type == pqParallelCoordinatesChartView::chartViewType())
     {
@@ -166,9 +180,17 @@ vtkSMProxy* pqStandardViewModules::createViewProxy(const QString& viewtype,
     {
     root_xmlname = "XYChartView";
     }
+  else if (viewtype == pqXYBagChartView::XYBagChartViewType())
+    {
+    root_xmlname = "XYBagChartView";
+    }
   else if (viewtype == pqXYBarChartView::XYBarChartViewType())
     {
     root_xmlname = "XYBarChartView";
+    }
+  else if (viewtype == pqXYBoxChartView::XYBoxChartViewType())
+    {
+    root_xmlname = "XYBoxChartView";
     }
   else if (viewtype == pqParallelCoordinatesChartView::chartViewType())
     {
@@ -252,9 +274,21 @@ pqView* pqStandardViewModules::createView(const QString& viewtype,
                             vtkSMContextViewProxy::SafeDownCast(viewmodule),
                             server, p);
     }
+  else if (viewtype == "XYBagChartView")
+    {
+    return new pqXYBagChartView(group, viewname,
+                                vtkSMContextViewProxy::SafeDownCast(viewmodule),
+                                server, p);
+    }
   else if (viewtype == "XYBarChartView")
     {
     return new pqXYBarChartView(group, viewname,
+                                vtkSMContextViewProxy::SafeDownCast(viewmodule),
+                                server, p);
+    }
+  else if (viewtype == "XYBoxChartView")
+    {
+    return new pqXYBoxChartView(group, viewname,
                                 vtkSMContextViewProxy::SafeDownCast(viewmodule),
                                 server, p);
     }
@@ -285,7 +319,9 @@ pqDataRepresentation* pqStandardViewModules::createDisplay(const QString& displa
   QObject* p)
 {
   if (display_type == "XYChartRepresentation" ||
+      display_type == "XYBagChartRepresentation" ||
       display_type == "XYBarChartRepresentation" ||
+      display_type == "XYBoxChartRepresentation" ||
       display_type == "PlotMatrixRepresentation")
     {
     // new chart representations.

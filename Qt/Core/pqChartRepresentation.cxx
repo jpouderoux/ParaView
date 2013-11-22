@@ -96,6 +96,15 @@ void pqChartRepresentation::setDefaultPropertyValues()
       }
     y_array = "bin_values";
     }
+  else if (series_arrays.contains("q2"))
+    {
+    // typically implies that the output is from a compute quantiles filter.
+    if (series_arrays.contains("x"))
+      {
+      x_array = "x";
+      }
+    y_array = "q2";
+    }
   else if (series_arrays.contains(QVariant("Time")))
     {
     x_array = "Time";

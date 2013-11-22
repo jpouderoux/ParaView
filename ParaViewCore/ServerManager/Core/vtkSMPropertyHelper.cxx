@@ -727,7 +727,7 @@ const char* vtkSMPropertyHelper::GetAsString(unsigned int index /*=0*/)
 }
 
 //----------------------------------------------------------------------------
-void vtkSMPropertyHelper::Set(unsigned int index, vtkSMProxy* value, 
+void vtkSMPropertyHelper::Set(unsigned int index, vtkSMProxy* value,
   unsigned int outputport/*=0*/)
 {
   if (this->Type == PROXY)
@@ -759,7 +759,7 @@ void vtkSMPropertyHelper::Set(unsigned int index, vtkSMProxy* value,
 }
 
 //----------------------------------------------------------------------------
-void vtkSMPropertyHelper::Set(vtkSMProxy** value, unsigned int count, 
+void vtkSMPropertyHelper::Set(vtkSMProxy** value, unsigned int count,
   unsigned int *outputports/*=NULL*/)
 {
   if (this->UseUnchecked)
@@ -980,7 +980,7 @@ bool vtkSMPropertyHelper::GetStatus(const char* key, double *values, int num_val
       }
 
     // Now check if the information_property has the value.
-    svp = svp->GetInformationOnly() == 0? 
+    svp = svp->GetInformationOnly() == 0?
       vtkSMStringVectorProperty::SafeDownCast(svp->GetInformationProperty()) : 0;
     }
 
@@ -1102,10 +1102,152 @@ const char* vtkSMPropertyHelper::GetStatus(const char* key, const char* default_
       }
 
     // Now check if the information_property has the value.
-    svp = svp->GetInformationOnly() == 0? 
+    svp = svp->GetInformationOnly() == 0?
       vtkSMStringVectorProperty::SafeDownCast(svp->GetInformationProperty()) : 0;
     }
 
   return default_value;
 }
 
+//----------------------------------------------------------------------------
+void vtkSMPropertyHelper::SetStatus(const char* key, const char *values[], int num_values)
+{
+  if (this->Type != vtkSMPropertyHelper::STRING)
+    {
+    vtkSMPropertyHelperWarningMacro("Status properties can only be vtkSMStringVectorProperty.");
+    return;
+    }
+
+  vtkSMStringVectorProperty* svp = vtkSMStringVectorProperty::SafeDownCast(
+    this->Property);
+
+  if (svp->GetNumberOfElementsPerCommand() != num_values+1)
+    {
+    vtkSMPropertyHelperWarningMacro("NumberOfElementsPerCommand != "<< num_values + 1);
+    return;
+    }
+
+  if (!svp->GetRepeatCommand())
+    {
+    vtkSMPropertyHelperWarningMacro("Property is non-repeatable.");
+    return;
+    }
+
+  if (this->UseUnchecked)
+    {
+    for (unsigned int cc=0; (cc+num_values+1) <= svp->GetNumberOfElements();
+      cc+=(num_values+1))
+      {
+      if (strcmp(svp->GetUncheckedElement(cc), key) == 0)
+        {
+        for (int kk=0; kk < num_values; kk++)
+          {
+          svp->SetUncheckedElement(cc+1, values[kk]);
+          }
+        return;
+        }
+      }
+    }
+  else
+    {
+    for (unsigned int cc=0; (cc+num_values+1) <= svp->GetNumberOfElements();
+      cc+=(num_values+1))
+      {
+      if (strcmp(svp->GetElement(cc), key) == 0)
+        {
+        for (int kk=0; kk < num_values; kk++)
+          {
+          svp->SetElement(cc+kk+1, values[kk]);
+          }
+        }
+      }
+    }
+
+  vtkStringList* list = vtkStringList::New();
+  if (this->UseUnchecked)
+    {
+    svp->GetUncheckedElements(list);
+    }
+  else
+    {
+    svp->GetElements(list);
+    }
+  list->AddString(key);
+  for (int kk=0; kk < num_values; kk++)
+    {
+    list->AddString(values[kk]);
+    }
+  if (this->UseUnchecked)
+    {
+    svp->SetUncheckedElements(list);
+    }
+  else
+    {
+    svp->SetElements(list);
+    }
+  list->Delete();
+}
+
+//----------------------------------------------------------------------------
+bool vtkSMPropertyHelper::GetStatus(const char *key, const char *values[], int num_values)
+{
+  if (this->Type != vtkSMPropertyHelper::STRING)
+    {
+    vtkSMPropertyHelperWarningMacro("Status properties can only be vtkSMStringVectorProperty.");
+    return false;
+    }
+
+  vtkSMStringVectorProperty* svp =
+    vtkSMStringVectorProperty::SafeDownCast(this->Property);
+
+  while (svp)
+    {
+    if (svp->GetNumberOfElementsPerCommand() != num_values + 1)
+      {
+      vtkSMPropertyHelperWarningMacro("NumberOfElementsPerCommand != "<< num_values + 1);
+      return false;
+      }
+
+    if (!svp->GetRepeatCommand())
+      {
+      vtkSMPropertyHelperWarningMacro("Property is non-repeatable.");
+      return false;
+      }
+
+    if (this->UseUnchecked)
+      {
+      for (unsigned int cc = 0; (cc + num_values + 1) <= svp->GetNumberOfElements();
+        cc += (num_values + 1))
+        {
+        if (strcmp(svp->GetUncheckedElement(cc), key) == 0)
+          {
+          for (int kk = 0; kk < num_values; kk++)
+            {
+             values[kk] = svp->GetUncheckedElement(cc + 1);
+            }
+          return true;
+          }
+        }
+      }
+    else
+      {
+      for (unsigned int cc = 0; (cc + num_values + 1) <= svp->GetNumberOfElements();
+        cc += (num_values + 1))
+        {
+        if (strcmp(svp->GetElement(cc), key) == 0)
+          {
+          for (int kk = 0; kk < num_values; kk++)
+            {
+            values[kk] = svp->GetElement(cc + kk + 1);
+            }
+          return true;
+          }
+        }
+      }
+    // Now check if the information_property has the value.
+    svp = svp->GetInformationOnly() == 0 ?
+      vtkSMStringVectorProperty::SafeDownCast(svp->GetInformationProperty()) : 0;
+    }
+
+  return false;
+}

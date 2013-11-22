@@ -43,7 +43,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "pqServerManagerObserver.h"
 #include "pqSpreadSheetView.h"
 #include "pqUndoStack.h"
+#include "pqXYBagChartView.h"
 #include "pqXYBarChartView.h"
+#include "pqXYBoxChartView.h"
 #include "pqXYChartView.h"
 
 #include <QApplication>
@@ -65,7 +67,9 @@ public:
     SERVER,
     LINK,
     GEOMETRY,
+    BAGCHART,
     BARCHART,
+    BOXCHART,
     LINECHART,
     TABLE,
     INDETERMINATE,
@@ -338,9 +342,17 @@ private:
       {
       QString type = policy->getPreferredViewType(
         port, false);
+      if (type == pqXYBagChartView::XYBagChartViewType())
+        {
+        return BAGCHART;
+        }
       if (type == pqXYBarChartView::XYBarChartViewType())
         {
         return BARCHART;
+        }
+      if (type == pqXYBoxChartView::XYBoxChartViewType())
+        {
+        return BOXCHART;
         }
       if (type == pqXYChartView::XYChartViewType())
         {
@@ -392,8 +404,12 @@ void pqPipelineModel::constructor()
     ":/pqWidgets/Icons/pqLinkBack16.png");
   this->PixmapList[pqPipelineModelDataItem::GEOMETRY].load(
     ":/pqWidgets/Icons/pq3DView16.png");
+  this->PixmapList[pqPipelineModelDataItem::BAGCHART].load(
+    ":/pqWidgets/Icons/pqBagChart16.png");
   this->PixmapList[pqPipelineModelDataItem::BARCHART].load(
     ":/pqWidgets/Icons/pqHistogram16.png");
+  this->PixmapList[pqPipelineModelDataItem::BOXCHART].load(
+    ":/pqWidgets/Icons/pqBoxChart16.png");
   this->PixmapList[pqPipelineModelDataItem::LINECHART].load(
     ":/pqWidgets/Icons/pqLineChart16.png");
   this->PixmapList[pqPipelineModelDataItem::TABLE].load(

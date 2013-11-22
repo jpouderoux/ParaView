@@ -92,9 +92,17 @@ void vtkXYChartRepresentation::SetChartType(const char *type)
     {
     this->XYOptions->SetChartType(vtkChart::LINE);
     }
+  else if (strcmp(type, "Bag") == 0)
+    {
+    this->XYOptions->SetChartType(vtkChart::BAG);
+    }
   else if (strcmp(type, "Bar") == 0)
     {
     this->XYOptions->SetChartType(vtkChart::BAR);
+    }
+  else if (strcmp(type, "Box") == 0)
+    {
+    this->XYOptions->SetChartType(vtkChart::BOX);
     }
 }
 

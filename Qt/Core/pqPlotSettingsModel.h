@@ -35,6 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "pqCheckableHeaderModel.h"
 #include "pqCoreModule.h"
 #include <QColor>
+#include <QVector>
 
 class vtkTable;
 class vtkChartXY;
@@ -111,6 +112,14 @@ public slots:
   void setSeriesStyle(int row, int style);
   void setSeriesAxisCorner(int row, int axiscorner);
   void setSeriesMarkerStyle(int row, int style);
+  void setSeriesQuartiles(int row, int q0, int q1, int q3, int q4);
+  void setSeriesQuartiles(const char *row,
+                          const char *q0,
+                          const char *q1,
+                          const char *q3,
+                          const char *q4);
+  void setSeriesDensity(int row, int density);
+  void setSeriesDensity(const char *name, const char *density);
 
   // Description:
   // API to get series properties.
@@ -122,6 +131,8 @@ public slots:
   int getSeriesStyle(int row) const;
   int getSeriesAxisCorner(int row) const;
   int getSeriesMarkerStyle(int row) const;
+  QVector<QString> getSeriesQuartiles(int row) const;
+  QString getSeriesDensity(int row) const;
 
 protected slots:
   /// emits data-changed event whenever the properties are modified.

@@ -69,6 +69,15 @@ protected slots:
 
   void setCurrentSeriesMarkerStyle(int listIndex);
 
+  void setCurrentSeriesQ0(const QString &newQ0);
+  void setCurrentSeriesQ1(const QString &newQ1);
+  void setCurrentSeriesQ3(const QString &newQ3);
+  void setCurrentSeriesQ4(const QString &newQ4);
+  void fillQuartilesArray();
+
+  void setCurrentSeriesDensity(const QString &newBag);
+  void fillDensityArray();
+
   void useArrayIndexToggled(bool);
 
   void useDataArrayToggled(bool);
@@ -86,6 +95,9 @@ private:
 
   /// Disable/enable elements of the dialog based on the chart type.
   void changeDialog(pqRepresentation* display);
+
+  /// Update series quartiles properties of the selected lines.
+  void updateSeriesQuartiles();
 
   Qt::CheckState getEnabledState() const;
 

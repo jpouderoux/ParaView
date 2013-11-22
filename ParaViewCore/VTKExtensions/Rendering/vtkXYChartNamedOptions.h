@@ -54,8 +54,19 @@ public:
   const char* GetXSeriesName();
 
   // Description:
+  // Set density column to be used for the series with the given name.
+  void SetDensity(const char *name, const char *bag);
+
+  // Description:
   // Set whether the index should be used for the x axis.
   void SetUseIndexForXAxis(bool useIndex);
+
+  // Description:
+  // Set quartiles to be used for the series with the given median,
+  // if NULL do noting.
+  // This method is only useful for box type.
+  void SetQuartiles(const char* median,
+    const char* q0, const char* q1, const char* q3, const char* q4);
 
   // Description:
   // Hides or plots that belong to this table.  When showing,

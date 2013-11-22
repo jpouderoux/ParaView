@@ -82,7 +82,9 @@ public:
 
     if (type == "XYPlotRepresentation" ||
        type == "XYChartRepresentation" ||
+       type == "XYBagChartRepresentation" ||
        type == "XYBarChartRepresentation" ||
+       type == "XYBoxChartRepresentation" ||
        type == "BarChartRepresentation" ||
        type == "SpreadSheetRepresentation" ||
        qobject_cast<pqTextRepresentation*>(proxy)||
@@ -98,18 +100,16 @@ public:
   /// Creates a panel for the given proxy
   virtual pqDisplayPanel* createPanel(pqRepresentation* proxy, QWidget* p)
     {
-    if(!proxy || !proxy->getProxy())
+    if (!proxy || !proxy->getProxy())
       {
       qDebug() << "Proxy is null" << proxy;
       return NULL;
       }
 
     QString type = proxy->getProxy()->GetXMLName();
-    if (type == QString("XYChartRepresentation"))
-      {
-      return new pqXYChartDisplayPanel(proxy, p);
-      }
-    if (type == QString("XYBarChartRepresentation"))
+    if (type == QString("XYChartRepresentation") ||
+        type == QString("XYBarChartRepresentation") ||
+        type == QString("XYBoxChartRepresentation"))
       {
       return new pqXYChartDisplayPanel(proxy, p);
       }

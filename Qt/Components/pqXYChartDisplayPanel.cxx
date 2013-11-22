@@ -35,6 +35,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "vtkChart.h"
 #include "vtkDataArray.h"
 #include "vtkDataObject.h"
+#include "vtkEventQtSlotConnect.h"
 #include "vtkSMArraySelectionDomain.h"
 #include "vtkSmartPointer.h"
 #include "vtkSMChartRepresentationProxy.h"
@@ -76,6 +77,22 @@ public:
     this->XAxisArrayAdaptor = 0;
     this->CompositeIndexAdaptor = 0;
     this->AttributeModeAdaptor = 0;
+
+    // Specific to Box plot
+    this->Q0ArrayDomain = 0;
+    this->Q0ArrayAdaptor = 0;
+    this->Q1ArrayDomain = 0;
+    this->Q1ArrayAdaptor = 0;
+    this->Q3ArrayDomain = 0;
+    this->Q3ArrayAdaptor = 0;
+    this->Q4ArrayDomain = 0;
+    this->Q4ArrayAdaptor = 0;
+    this->QuartilesArrayConnection = vtkEventQtSlotConnect::New();
+
+    // Specific to Bag plot
+    this->DensityArrayDomain = 0;
+    this->DensityArrayAdaptor = 0;
+    this->DensityArrayConnection = vtkEventQtSlotConnect::New();
     }
 
   ~pqInternal()
@@ -85,6 +102,22 @@ public:
     delete this->XAxisArrayAdaptor;
     delete this->CompositeIndexAdaptor;
     delete this->AttributeModeAdaptor;
+
+    // Specific to Box plot
+    delete this->Q0ArrayDomain;
+    delete this->Q0ArrayAdaptor;
+    delete this->Q1ArrayDomain;
+    delete this->Q1ArrayAdaptor;
+    delete this->Q3ArrayDomain;
+    delete this->Q3ArrayAdaptor;
+    delete this->Q4ArrayDomain;
+    delete this->Q4ArrayAdaptor;
+    this->QuartilesArrayConnection->Delete();
+
+    // Specific to Bag plot
+    delete this->DensityArrayDomain;
+    delete this->DensityArrayAdaptor;
+    this->DensityArrayConnection->Delete();
     }
 
   vtkWeakPointer<vtkSMChartRepresentationProxy> ChartRepresentation;
@@ -94,6 +127,22 @@ public:
   pqSignalAdaptorComboBox* XAxisArrayAdaptor;
   pqPropertyLinks Links;
   pqSignalAdaptorCompositeTreeWidget* CompositeIndexAdaptor;
+
+  // Specific to Box plot
+  pqComboBoxDomain* Q0ArrayDomain;
+  pqSignalAdaptorComboBox* Q0ArrayAdaptor;
+  pqComboBoxDomain* Q1ArrayDomain;
+  pqSignalAdaptorComboBox* Q1ArrayAdaptor;
+  pqComboBoxDomain* Q3ArrayDomain;
+  pqSignalAdaptorComboBox* Q3ArrayAdaptor;
+  pqComboBoxDomain* Q4ArrayDomain;
+  pqSignalAdaptorComboBox* Q4ArrayAdaptor;
+  vtkEventQtSlotConnect* QuartilesArrayConnection;
+
+  // Specific to Bag plot
+  pqComboBoxDomain* DensityArrayDomain;
+  pqSignalAdaptorComboBox* DensityArrayAdaptor;
+  vtkEventQtSlotConnect* DensityArrayConnection;
 
   bool InChange;
 };
@@ -140,6 +189,23 @@ pqXYChartDisplayPanel::pqXYChartDisplayPanel(
     this, SLOT(useArrayIndexToggled(bool)));
   QObject::connect(this->Internal->UseDataArray, SIGNAL(toggled(bool)),
     this, SLOT(useDataArrayToggled(bool)));
+
+  QObject::connect(this->Internal->Q0Array,
+    SIGNAL(currentIndexChanged(const QString&)),
+    this, SLOT(setCurrentSeriesQ0(const QString&)));
+  QObject::connect(this->Internal->Q1Array,
+    SIGNAL(currentIndexChanged(const QString&)),
+    this, SLOT(setCurrentSeriesQ1(const QString&)));
+  QObject::connect(this->Internal->Q3Array,
+    SIGNAL(currentIndexChanged(const QString&)),
+    this, SLOT(setCurrentSeriesQ3(const QString&)));
+  QObject::connect(this->Internal->Q4Array,
+    SIGNAL(currentIndexChanged(const QString&)),
+    this, SLOT(setCurrentSeriesQ4(const QString&)));
+
+  QObject::connect(this->Internal->DensityArray,
+    SIGNAL(currentIndexChanged(const QString&)),
+    this, SLOT(setCurrentSeriesDensity(const QString&)));
 
   QObject::connect(
     this->Internal->ColorButton, SIGNAL(chosenColorChanged(const QColor &)),
@@ -224,10 +290,18 @@ void pqXYChartDisplayPanel::setDisplay(pqRepresentation* disp)
   // Connect to the new properties.pqComboBoxDomain will ensure that
   // when ever the domain changes the widget is updated as well.
   this->Internal->XAxisArrayDomain = new pqComboBoxDomain(
-      this->Internal->XAxisArray, proxy->GetProperty("XArrayName"));
+    this->Internal->XAxisArray, proxy->GetProperty("XArrayName"));
   this->Internal->Links.addPropertyLink(this->Internal->XAxisArrayAdaptor,
-      "currentText", SIGNAL(currentTextChanged(const QString&)),
-      proxy, proxy->GetProperty("XArrayName"));
+    "currentText", SIGNAL(currentTextChanged(const QString&)),
+    proxy, proxy->GetProperty("XArrayName"));
+
+  this->Internal->QuartilesArrayConnection->Connect(
+    proxy->GetProperty("SeriesNamesInfo"), vtkCommand::ModifiedEvent,
+    this, SLOT(fillQuartilesArray()));
+
+  this->Internal->DensityArrayConnection->Connect(
+    proxy->GetProperty("SeriesNamesInfo"), vtkCommand::ModifiedEvent,
+    this, SLOT(fillDensityArray()));
 
   // Link to set whether the index is used for the x axis
   this->Internal->Links.addPropertyLink(
@@ -247,6 +321,10 @@ void pqXYChartDisplayPanel::setDisplay(pqRepresentation* disp)
     this, SLOT(reloadSeries()));
 
   this->reloadSeries();
+
+  this->fillQuartilesArray();
+
+  this->fillDensityArray();
 }
 
 //-----------------------------------------------------------------------------
@@ -254,11 +332,9 @@ void pqXYChartDisplayPanel::changeDialog(pqRepresentation* disp)
 {
   vtkSMChartRepresentationProxy* proxy =
     vtkSMChartRepresentationProxy::SafeDownCast(disp->getProxy());
-  bool visible = true;
-  if (QString("Bar") == vtkSMPropertyHelper(proxy,"ChartType").GetAsString())
-    {
-    visible = false;
-    }
+  QString chartType = vtkSMPropertyHelper(proxy,"ChartType").GetAsString();
+
+  bool visible = (chartType != QString("Bar"));
   this->Internal->Thickness->setVisible(visible);
   this->Internal->ThicknessLabel->setVisible(visible);
   this->Internal->StyleList->setVisible(visible);
@@ -267,6 +343,18 @@ void pqXYChartDisplayPanel::changeDialog(pqRepresentation* disp)
   this->Internal->MarkerStyleListLabel->setVisible(visible);
   this->Internal->AxisList->setVisible(visible);
   this->Internal->AxisListLabel->setVisible(visible);
+
+  visible = (chartType == QString("Box"));
+  this->Internal->Q0Array->setVisible(visible);
+  this->Internal->Q1Array->setVisible(visible);
+  this->Internal->Q3Array->setVisible(visible);
+  this->Internal->Q4Array->setVisible(visible);
+  this->Internal->MedianLabel->setVisible(visible);
+  this->Internal->QuartilesLabel->setVisible(visible);
+
+  visible = (chartType == QString("Bag"));
+  this->Internal->DensityLabel->setVisible(visible);
+  this->Internal->DensityArray->setVisible(visible);
 }
 
 //-----------------------------------------------------------------------------
@@ -299,6 +387,9 @@ void pqXYChartDisplayPanel::activateItem(const QModelIndex &index)
 void pqXYChartDisplayPanel::updateOptionsWidgets()
 {
   QItemSelectionModel *model = this->Internal->SeriesList->selectionModel();
+  QString chartType = vtkSMPropertyHelper(this->Internal->ChartRepresentation,
+    "ChartType").GetAsString();
+
   if(model)
     {
     // Show the options for the current item.
@@ -315,6 +406,12 @@ void pqXYChartDisplayPanel::updateOptionsWidgets()
     this->Internal->StyleList->blockSignals(true);
     this->Internal->MarkerStyleList->blockSignals(true);
     this->Internal->AxisList->blockSignals(true);
+    this->Internal->Q0Array->blockSignals(true);
+    this->Internal->Q1Array->blockSignals(true);
+    this->Internal->Q3Array->blockSignals(true);
+    this->Internal->Q4Array->blockSignals(true);
+    this->Internal->DensityArray->blockSignals(true);
+
     if (current.isValid())
       {
       int seriesIndex = current.row();
@@ -328,6 +425,29 @@ void pqXYChartDisplayPanel::updateOptionsWidgets()
         this->Internal->SettingsModel->getSeriesMarkerStyle(seriesIndex));
       this->Internal->AxisList->setCurrentIndex(
         this->Internal->SettingsModel->getSeriesAxisCorner(seriesIndex));
+
+      if (chartType == "Box")
+        {
+        QVector<QString> q =
+          this->Internal->SettingsModel->getSeriesQuartiles(seriesIndex);
+        if (q.count() == 4)
+          {
+          this->Internal->Q0Array->setCurrentIndex(
+            this->Internal->Q0Array->findText(q[0]));
+          this->Internal->Q1Array->setCurrentIndex(
+            this->Internal->Q1Array->findText(q[1]));
+          this->Internal->Q3Array->setCurrentIndex(
+            this->Internal->Q3Array->findText(q[2]));
+          this->Internal->Q4Array->setCurrentIndex(
+            this->Internal->Q4Array->findText(q[3]));
+          }
+        }
+      else if (chartType == "Bag")
+        {
+        QString bagName = this->Internal->SettingsModel->getSeriesDensity(seriesIndex);
+        this->Internal->DensityArray->setCurrentIndex(
+          this->Internal->DensityArray->findText(bagName));
+        }
       }
     else
       {
@@ -336,6 +456,13 @@ void pqXYChartDisplayPanel::updateOptionsWidgets()
       this->Internal->StyleList->setCurrentIndex(0);
       this->Internal->MarkerStyleList->setCurrentIndex(0);
       this->Internal->AxisList->setCurrentIndex(0);
+
+      this->Internal->Q0Array->setCurrentIndex(0);
+      this->Internal->Q1Array->setCurrentIndex(1);
+      this->Internal->Q3Array->setCurrentIndex(2);
+      this->Internal->Q4Array->setCurrentIndex(3);
+
+      this->Internal->DensityArray->setCurrentIndex(2);
       }
 
     this->Internal->ColorButton->blockSignals(false);
@@ -344,6 +471,13 @@ void pqXYChartDisplayPanel::updateOptionsWidgets()
     this->Internal->MarkerStyleList->blockSignals(false);
     this->Internal->AxisList->blockSignals(false);
 
+    this->Internal->Q0Array->blockSignals(false);
+    this->Internal->Q1Array->blockSignals(false);
+    this->Internal->Q3Array->blockSignals(false);
+    this->Internal->Q4Array->blockSignals(false);
+
+    this->Internal->DensityArray->blockSignals(false);
+
     // Disable the widgets if nothing is selected or current.
     bool hasItems = indexes.size() > 0;
     this->Internal->ColorButton->setEnabled(hasItems);
@@ -351,6 +485,13 @@ void pqXYChartDisplayPanel::updateOptionsWidgets()
     this->Internal->StyleList->setEnabled(hasItems);
     this->Internal->MarkerStyleList->setEnabled(hasItems);
     this->Internal->AxisList->setEnabled(hasItems);
+
+    this->Internal->Q0Array->setEnabled(hasItems);
+    this->Internal->Q1Array->setEnabled(hasItems);
+    this->Internal->Q3Array->setEnabled(hasItems);
+    this->Internal->Q4Array->setEnabled(hasItems);
+
+    this->Internal->DensityArray->setEnabled(hasItems);
     }
 }
 
@@ -368,6 +509,122 @@ void pqXYChartDisplayPanel::setCurrentSeriesColor(const QColor &color)
       this->Internal->SettingsModel->setSeriesColor(iter->row(), color);
       }
     this->Internal->InChange = false;
+    }
+}
+
+//-----------------------------------------------------------------------------
+void pqXYChartDisplayPanel::setCurrentSeriesQ0(const QString &newQ0)
+{
+  if (!newQ0.isEmpty())
+    {
+    this->updateSeriesQuartiles();
+    }
+}
+
+//-----------------------------------------------------------------------------
+void pqXYChartDisplayPanel::setCurrentSeriesQ1(const QString &newQ1)
+{
+  if (!newQ1.isEmpty())
+    {
+    this->updateSeriesQuartiles();
+    }
+}
+
+//-----------------------------------------------------------------------------
+void pqXYChartDisplayPanel::setCurrentSeriesQ3(const QString &newQ3)
+{
+  if (!newQ3.isEmpty())
+    {
+    this->updateSeriesQuartiles();
+    }
+}
+
+//-----------------------------------------------------------------------------
+void pqXYChartDisplayPanel::setCurrentSeriesQ4(const QString &newQ4)
+{
+  if (!newQ4.isEmpty())
+    {
+    this->updateSeriesQuartiles();
+    }
+}
+
+//-----------------------------------------------------------------------------
+void pqXYChartDisplayPanel::fillQuartilesArray()
+{
+  this->Internal->Q0Array->clear();
+  this->Internal->Q1Array->clear();
+  this->Internal->Q3Array->clear();
+  this->Internal->Q4Array->clear();
+
+  int len = vtkSMPropertyHelper(this->Internal->ChartRepresentation,
+    "SeriesNamesInfo").GetNumberOfElements();
+
+  for (int i = 0; i < len; ++i)
+    {
+    this->Internal->Q0Array->addItem(vtkSMPropertyHelper(
+      this->Internal->ChartRepresentation, "SeriesNamesInfo").GetAsString(i));
+    this->Internal->Q1Array->addItem(vtkSMPropertyHelper(
+      this->Internal->ChartRepresentation, "SeriesNamesInfo").GetAsString(i));
+    this->Internal->Q3Array->addItem(vtkSMPropertyHelper(
+      this->Internal->ChartRepresentation, "SeriesNamesInfo").GetAsString(i));
+    this->Internal->Q4Array->addItem(vtkSMPropertyHelper(
+      this->Internal->ChartRepresentation, "SeriesNamesInfo").GetAsString(i));
+    }
+}
+
+//-----------------------------------------------------------------------------
+void pqXYChartDisplayPanel::updateSeriesQuartiles()
+{
+  QItemSelectionModel *model = this->Internal->SeriesList->selectionModel();
+  if (model)
+    {
+    QModelIndexList indexes = model->selectedIndexes();
+    QModelIndexList::Iterator iter = indexes.begin();
+    for (; iter != indexes.end(); ++iter)
+      {
+      const char *q2 = this->Internal->SettingsModel->getSeriesName(iter->row());
+      this->Internal->SettingsModel->setSeriesQuartiles(q2,
+        this->Internal->Q0Array->currentText().toStdString().c_str(),
+        this->Internal->Q1Array->currentText().toStdString().c_str(),
+        this->Internal->Q3Array->currentText().toStdString().c_str(),
+        this->Internal->Q4Array->currentText().toStdString().c_str());
+      }
+    this->Internal->InChange = false;
+    }
+}
+
+//-----------------------------------------------------------------------------
+void pqXYChartDisplayPanel::setCurrentSeriesDensity(const QString &newBag)
+{
+  if (!newBag.isEmpty())
+    {
+    QItemSelectionModel *model = this->Internal->SeriesList->selectionModel();
+      if (model)
+        {
+        QModelIndexList indexes = model->selectedIndexes();
+        QModelIndexList::Iterator iter = indexes.begin();
+        for (; iter != indexes.end(); ++iter)
+          {
+          this->Internal->SettingsModel->setSeriesDensity(
+            this->Internal->SettingsModel->getSeriesName(iter->row()),
+            this->Internal->DensityArray->currentText().toStdString().c_str());
+          }
+        this->Internal->InChange = false;
+        }
+    }
+}
+
+//-----------------------------------------------------------------------------
+void pqXYChartDisplayPanel::fillDensityArray()
+{
+  this->Internal->DensityArray->clear();
+
+  for (unsigned int i = 0; i < vtkSMPropertyHelper(
+         this->Internal->ChartRepresentation,
+         "SeriesNamesInfo").GetNumberOfElements(); ++i)
+    {
+    this->Internal->DensityArray->addItem(vtkSMPropertyHelper(
+      this->Internal->ChartRepresentation, "SeriesNamesInfo").GetAsString(i));
     }
 }
 

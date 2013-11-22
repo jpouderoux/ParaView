@@ -233,8 +233,12 @@ set(Module_SRCS
   pqXMLEventSource.h
   pqXMLUtil.cxx
   pqXMLUtil.h
+  pqXYBagChartView.cxx
+  pqXYBagChartView.h
   pqXYBarChartView.cxx
   pqXYBarChartView.h
+  pqXYBoxChartView.cxx
+  pqXYBoxChartView.h
   pqXYChartView.cxx
   pqXYChartView.h
   vtkPVGUIPluginInterface.cxx
@@ -323,7 +327,9 @@ set (Module_MOC_HDRS
   pqView.h
   pqXMLEventObserver.h
   pqXMLEventSource.h
+  pqXYBagChartView.h
   pqXYBarChartView.h
+  pqXYBoxChartView.h
   pqXYChartView.h
 )
 

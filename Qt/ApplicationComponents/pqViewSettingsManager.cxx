@@ -44,7 +44,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "pqMultiSliceView.h"
 #include "pqPlotMatrixView.h"
 #include "pqViewOptionsInterface.h"
+#include "pqXYBagChartView.h"
 #include "pqXYBarChartView.h"
+#include "pqXYBoxChartView.h"
 #include "pqXYChartView.h"
 
 //-----------------------------------------------------------------------------
@@ -58,9 +60,13 @@ pqViewSettingsManager::pqViewSettingsManager(QObject* parentObject)
     renderViewOptions);
 
   pqActiveXYChartOptions *xyChartOptions = new pqActiveXYChartOptions(this);
+  pqActiveXYChartOptions *xyBagChartOptions = new pqActiveXYChartOptions(this);
   pqActiveXYChartOptions *xyBarChartOptions = new pqActiveXYChartOptions(this);
+  pqActiveXYChartOptions *xyBoxChartOptions = new pqActiveXYChartOptions(this);
   this->registerOptions(pqXYChartView::XYChartViewType(), xyChartOptions);
+  this->registerOptions(pqXYBagChartView::XYBagChartViewType(), xyBagChartOptions);
   this->registerOptions(pqXYBarChartView::XYBarChartViewType(), xyBarChartOptions);
+  this->registerOptions(pqXYBoxChartView::XYBoxChartViewType(), xyBoxChartOptions);
 
   // register for comparative views.
   this->registerOptions(pqComparativeXYChartView::chartViewType(), xyChartOptions);
