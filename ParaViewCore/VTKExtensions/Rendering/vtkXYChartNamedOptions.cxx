@@ -371,14 +371,7 @@ void vtkXYChartNamedOptions::SetPlotVisibilityInternal(PlotInfo& plotInfo,
         chartxy->SetPlotCorner(plot, plotInfo.Corner);
 
         // Must downcast to set all columns
-        if (vtkPlotBox *box = vtkPlotBox::SafeDownCast(plot))
-          {
-          box->SetUseIndexForXSeries(this->Internals->UseIndexForXAxis);
-          box->SetInputData(plotInfo.Tables[i],
-            this->Internals->XSeriesName.c_str(),
-            plotInfo.Q0, plotInfo.Q1, seriesName, plotInfo.Q3, plotInfo.Q4);
-          }
-        else if (vtkPlotBag *density = vtkPlotBag::SafeDownCast(plot))
+        if (vtkPlotBag *density = vtkPlotBag::SafeDownCast(plot))
           {
           density->SetUseIndexForXSeries(this->Internals->UseIndexForXAxis);
           density->SetInputData(plotInfo.Tables[i],

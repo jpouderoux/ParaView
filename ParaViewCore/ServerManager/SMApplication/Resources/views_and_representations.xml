@@ -4207,8 +4207,6 @@
                proxygroup="options"
                proxyname="XYBoxPlotOptions"></Proxy>
         <ExposedProperties>
-          <Property exposed_name="SeriesQuartiles"
-                    name="Quartiles" />
           <Property exposed_name="SeriesVisibility"
                     name="Visibility" />
           <Property exposed_name="SeriesColor"
@@ -4223,8 +4221,6 @@
                     name="MarkerStyle" />
           <Property exposed_name="SeriesPlotCorner"
                     name="PlotCorner" />
-          <Property exposed_name="SeriesQuartilesinfo"
-                    name="QuartilesInfo" />
           <Property exposed_name="SeriesVisibilityInfo"
                     name="VisibilityInfo" />
           <Property exposed_name="SeriesColorInfo"

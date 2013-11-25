@@ -137,6 +137,11 @@ void vtkPVXYChartView::SetChartType(const char *type)
     strcmp(type, "Box") == 0 || strcmp(type, "Bag") == 0)
     {
     this->Chart = vtkChartXY::New();
+    if (strcmp(type, "Box") == 0)
+      {
+      this->Chart->GetAxis(0)->SetLabelsVisible(false);
+      this->Chart->GetAxis(0)->SetTicksVisible(false);
+      }
     }
   else if (strcmp(type, "ParallelCoordinates") == 0)
     {
@@ -323,6 +328,12 @@ void vtkPVXYChartView::SetAxisLabelVisibility(int index, bool visible)
 {
   if (this->Chart)
     {
+    if ((index == vtkAxis::BOTTOM || index == vtkAxis::TOP) && 
+      this->IsA("vtkPVBoxChartView")) 
+      {
+      visible = false;
+      this->Chart->GetAxis(index)->SetTicksVisible(false);
+      }
     this->Chart->GetAxis(index)->SetLabelsVisible(visible);
     }
 }
