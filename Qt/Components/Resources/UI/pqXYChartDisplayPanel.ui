@@ -84,7 +84,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="XAxisDataGroup">
      <property name="title">
       <string>X Axis Data</string>
      </property>

@@ -294,6 +294,7 @@ void pqXYChartDisplayPanel::changeDialog(pqRepresentation* disp)
   this->Internal->StyleListLabel->setVisible(visible);
   this->Internal->MarkerStyleList->setVisible(visible);
   this->Internal->MarkerStyleListLabel->setVisible(visible);
+  this->Internal->XAxisDataGroup->setVisible(visible);
 
   visible = (chartType == QString("Bag"));
   this->Internal->DensityLabel->setVisible(visible);
