@@ -63,6 +63,7 @@ set (Module_SRCS
   vtkPVDataRepresentation.cxx
   vtkPVDataRepresentationPipeline.cxx
   vtkPVDisplayInformation.cxx
+  vtkPVFunctionalBagChartView.cxx
   vtkPVHardwareSelector.cxx
   vtkPVImageSliceMapper.cxx
   vtkPVImplicitPlaneRepresentation.cxx

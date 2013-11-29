@@ -9326,7 +9326,7 @@ found and the point will be rejected.</Documentation>
       <!-- End ComputeQuartiles -->
     </SourceProxy>
     <!-- ==================================================================== -->
-    <SourceProxy class="vtkTransposeTable"
+    <SourceProxy class="vtkPTransposeTable"
                  label="Transpose Table"
                  name="TransposeTable">
       <Documentation long_help="Transpose a table."
@@ -9344,6 +9344,53 @@ found and the point will be rejected.</Documentation>
         <Documentation>This property specifies the input to the
         filter.</Documentation>
       </InputProperty>
+      <IntVectorProperty command="SetAttributeMode"
+                         default_values="0"
+                         name="AttributeMode"
+                         number_of_elements="1">
+        <FieldDataDomain enable_field_data="1"
+                         name="enum">
+          <RequiredProperties>
+            <Property function="Input"
+                      name="Input" />
+          </RequiredProperties>
+        </FieldDataDomain>
+        <Documentation>Specify which type of field data the arrays will be
+        drawn from.</Documentation>
+      </IntVectorProperty>
+      <StringVectorProperty clean_command="ClearAttributeArrays"
+                            command="EnableAttributeArray"
+                            label="Variables of Interest"
+                            name="SelectArrays"
+                            number_of_elements_per_command="1"
+                            repeat_command="1">
+        <ArrayListDomain name="array_list">
+          <RequiredProperties>
+            <Property function="Input"
+                      name="Input" />
+            <Property function="FieldDataSelection"
+                      name="AttributeMode" />
+          </RequiredProperties>
+        </ArrayListDomain>
+        <Documentation>Choose arrays whose entries will be used to form
+        observations for statistical analysis.</Documentation>
+      </StringVectorProperty>
+      <IntVectorProperty command="SetAddIdColumn"
+                         default_values="1"
+                         name="AddIdColumn"
+                         number_of_elements="1">
+        <BooleanDomain name="bool" />
+        <Documentation>This flag indicates if a column must be inserted
+          at index 0 with the names (ids) of the input columns.</Documentation>
+      </IntVectorProperty>
+      <IntVectorProperty command="SetUseIdColumn"
+                         default_values="0"
+                         name="UseIdColumn"
+                         number_of_elements="1">
+        <BooleanDomain name="bool" />
+        <Documentation>This flag indicates if the output column must be
+          named using the names listed in the index 0 column.</Documentation>
+      </IntVectorProperty>
       <!-- End TransposeTable -->
     </SourceProxy>
     <!-- ==================================================================== -->
@@ -9381,7 +9428,6 @@ found and the point will be rejected.</Documentation>
                      short_help="Extracts geometry for a rectilinear grid.">
                      RectilinearGridGeometryFilter is a filter that extracts
                      geometry from a rectilinear grid. By specifying
-                     appropriate i-j-k indices, it is possible to extract a
                      point, a curve, a surface, or a "volume". The volume is
                      actually a (n x m x o) region of points. The extent
                      specification is zero-offset. That is, the first k-plane
@@ -11597,7 +11643,6 @@ found and the point will be rejected.</Documentation>
         <BooleanDomain name="bool" />
         <Documentation>Compute robust PCA with medians instead of means.</Documentation>
       </IntVectorProperty>
-
       <OutputPort index="0"
                   name="Statistical Model" />
       <OutputPort index="1"
@@ -11654,6 +11699,13 @@ found and the point will be rejected.</Documentation>
         <Documentation>A previously-calculated model with which to assess a
         separate dataset. This input is optional.</Documentation>
       </InputProperty>
+      <DoubleVectorProperty command="SetSigma"
+                         default_values="1"
+                         name="Sigma"
+                         number_of_elements="1">
+        <DoubleRangeDomain name="range" />
+        <Documentation>Specify the smoothing kernel size.</Documentation>
+      </DoubleVectorProperty>
       <IntVectorProperty command="SetAttributeMode"
                          default_values="0"
                          name="AttributeMode"
@@ -11726,7 +11778,7 @@ found and the point will be rejected.</Documentation>
       <Hints>
         <Visibility replace_input="0" />
         <!-- View can be used to specify the preferred view for the proxy -->
-        <View type="XYChartView" />
+        <View type="XYBagChartView" />
       </Hints>
     </SourceProxy>
     <!-- HighestDensityRegionStats -->

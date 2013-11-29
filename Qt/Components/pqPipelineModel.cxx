@@ -47,6 +47,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "pqXYBarChartView.h"
 #include "pqXYBoxChartView.h"
 #include "pqXYChartView.h"
+#include "pqXYFunctionalBagChartView.h"
 
 #include <QApplication>
 #include <QString>
@@ -70,6 +71,7 @@ public:
     BAGCHART,
     BARCHART,
     BOXCHART,
+    FUNCTIONALBAGCHART,
     LINECHART,
     TABLE,
     INDETERMINATE,
@@ -358,6 +360,10 @@ private:
         {
         return LINECHART;
         }
+      if (type == pqXYFunctionalBagChartView::XYFunctionalBagChartViewType())
+        {
+        return FUNCTIONALBAGCHART;
+        }
       if (type == pqSpreadSheetView::spreadsheetViewType())
         {
         return TABLE;
@@ -410,6 +416,8 @@ void pqPipelineModel::constructor()
     ":/pqWidgets/Icons/pqHistogram16.png");
   this->PixmapList[pqPipelineModelDataItem::BOXCHART].load(
     ":/pqWidgets/Icons/pqBoxChart16.png");
+  this->PixmapList[pqPipelineModelDataItem::FUNCTIONALBAGCHART].load(
+    ":/pqWidgets/Icons/pqFunctionalBagChart16.png");
   this->PixmapList[pqPipelineModelDataItem::LINECHART].load(
     ":/pqWidgets/Icons/pqLineChart16.png");
   this->PixmapList[pqPipelineModelDataItem::TABLE].load(

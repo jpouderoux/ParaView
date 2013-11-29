@@ -935,6 +935,16 @@
     <!-- ================================================================== -->
     <ContextViewProxy base_proxygroup="views"
                       base_proxyname="XYChartViewBase"
+                      class="vtkPVFunctionalBagChartView"
+                      name="XYFunctionalBagChartView"
+                      processes="client|renderserver|dataserver"
+                      representation_name="XYFunctionalBagChartRepresentation">
+      <Documentation>This is the proxy for functioanl bag chart
+      view.</Documentation>
+    </ContextViewProxy>
+    <!-- ================================================================== -->
+    <ContextViewProxy base_proxygroup="views"
+                      base_proxyname="XYChartViewBase"
                       class="vtkPVBarChartView"
                       name="XYBarChartView"
                       processes="client|renderserver|dataserver"
@@ -4139,6 +4149,19 @@
                             name="ChartType"
                             number_of_elements="1"></StringVectorProperty>
     </ChartRepresentationProxy>
+    <!-- =================================================================== -->
+    <ChartRepresentationProxy base_proxygroup="representations"
+                              base_proxyname="XYChartRepresentationBase"
+                              class="vtkXYChartRepresentation"
+                              name="XYBoxChartRepresentation"
+                              processes="client|dataserver|renderserver">
+      <Documentation>Representation used by XYBoxChartView.</Documentation>
+      <StringVectorProperty command="SetChartType"
+                            default_values="Box"
+                            name="ChartType"
+                            number_of_elements="1"></StringVectorProperty>
+    </ChartRepresentationProxy>
+    <!-- =================================================================== -->
     <!-- New representation for ContextView based charts. -->
     <ChartRepresentationProxy base_proxygroup="representations"
                               base_proxyname="XYChartRepresentationBaseBase"
@@ -4195,18 +4218,20 @@
     <ChartRepresentationProxy base_proxygroup="representations"
                               base_proxyname="XYChartRepresentationBaseBase"
                               class="vtkXYChartRepresentation"
-                              name="XYBoxChartRepresentation"
+                              name="XYFunctionalBagChartRepresentation"
                               processes="client|dataserver|renderserver">
-      <Documentation>Representation used by XYBoxChartView.</Documentation>
+      <Documentation>Representation used by XYFunctionalBagChartView.</Documentation>
       <StringVectorProperty command="SetChartType"
-                            default_values="Box"
+                            default_values="FunctionalBag"
                             name="ChartType"
                             number_of_elements="1"></StringVectorProperty>
       <SubProxy>
         <Proxy name="PlotOptions"
                proxygroup="options"
-               proxyname="XYBoxPlotOptions"></Proxy>
+               proxyname="XYFunctionBagPlotOptions"></Proxy>
         <ExposedProperties>
+          <Property exposed_name="SeriesDensity"
+                    name="Density" />
           <Property exposed_name="SeriesVisibility"
                     name="Visibility" />
           <Property exposed_name="SeriesColor"
@@ -4221,6 +4246,8 @@
                     name="MarkerStyle" />
           <Property exposed_name="SeriesPlotCorner"
                     name="PlotCorner" />
+          <Property exposed_name="SeriesBaginfo"
+                    name="BagInfo" />
           <Property exposed_name="SeriesVisibilityInfo"
                     name="VisibilityInfo" />
           <Property exposed_name="SeriesColorInfo"

@@ -58,6 +58,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "pqXYBarChartView.h"
 #include "pqXYBoxChartView.h"
 #include "pqXYChartView.h"
+#include "pqXYFunctionalBagChartView.h"
 
 #include "vtkAxis.h"
 
@@ -78,7 +79,8 @@ public:
     LINE,
     BAR,
     BOX,
-    BAG
+    BAG,
+    FUNCTIONALBAG
     };
 
   ChartType Type;
@@ -346,6 +348,14 @@ void pqXYChartOptionsEditor::setView(pqView* view)
   else if (qobject_cast<pqXYBoxChartView*>(view))
     {
     this->Internal->Type = pqInternal::BOX;
+    }
+  else if (qobject_cast<pqXYBagChartView*>(view))
+    {
+    this->Internal->Type = pqInternal::BAG;
+    }
+  else if (qobject_cast<pqXYFunctionalBagChartView*>(view))
+    {
+    this->Internal->Type = pqInternal::FUNCTIONALBAG;
     }
   else
     {

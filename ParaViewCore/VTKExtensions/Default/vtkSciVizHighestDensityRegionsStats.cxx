@@ -16,6 +16,7 @@ vtkStandardNewMacro(vtkSciVizHighestDensityRegionsStats);
 vtkSciVizHighestDensityRegionsStats::vtkSciVizHighestDensityRegionsStats()
 {
   this->TrainingFraction = 1.;
+  this->Sigma = 1.;
 }
 
 vtkSciVizHighestDensityRegionsStats::~vtkSciVizHighestDensityRegionsStats()
@@ -38,7 +39,7 @@ int vtkSciVizHighestDensityRegionsStats::LearnAndDerive( vtkMultiBlockDataSet* m
     stats->SetColumnStatus( inData->GetColumnName( i ), 1 );
     //stats->AddColumn( inData->GetColumnName( i ) );
     }
-
+  stats->SetSigma( this->Sigma );
   stats->SetLearnOption( true );
   stats->SetDeriveOption( true );
   stats->SetAssessOption( false );
@@ -81,6 +82,7 @@ int vtkSciVizHighestDensityRegionsStats::AssessData( vtkTable* observations, vtk
     //stats->AddColumn( observations->GetColumnName( i ) );
     }
 
+  stats->SetSigma(this->Sigma);
   stats->SetLearnOption( false );
   stats->SetDeriveOption( true );
   stats->SetAssessOption( true );

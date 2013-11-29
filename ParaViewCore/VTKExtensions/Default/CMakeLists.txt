@@ -84,6 +84,7 @@ set(Module_SRCS
   vtkPSciVizKMeans.cxx
   vtkPSciVizMultiCorrelativeStats.cxx
   vtkPSciVizPCAStats.cxx
+  vtkPTransposeTable.cxx
   vtkPVAMRDualClip.cxx
   vtkPVAMRDualContour.cxx
   vtkPVArrayCalculator.cxx

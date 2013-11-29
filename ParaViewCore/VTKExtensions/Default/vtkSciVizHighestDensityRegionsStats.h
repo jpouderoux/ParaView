@@ -28,12 +28,19 @@ public:
   vtkTypeMacro(vtkSciVizHighestDensityRegionsStats,vtkSciVizStatistics);
   virtual void PrintSelf( ostream& os, vtkIndent indent );
 
+  // Description:
+  // Smoothing kernel size of the HDR. Default is 1
+  vtkGetMacro(Sigma, double);
+  vtkSetMacro(Sigma, double);
+
 protected:
   vtkSciVizHighestDensityRegionsStats();
   virtual ~vtkSciVizHighestDensityRegionsStats();
 
   virtual int LearnAndDerive( vtkMultiBlockDataSet* model, vtkTable* inData );
   virtual int AssessData( vtkTable* observations, vtkDataObject* dataset, vtkMultiBlockDataSet* model );
+
+  double Sigma;
 
 private:
   vtkSciVizHighestDensityRegionsStats( const vtkSciVizHighestDensityRegionsStats& ); // Not implemented.

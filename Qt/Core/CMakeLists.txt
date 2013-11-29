@@ -241,6 +241,8 @@ set(Module_SRCS
   pqXYBoxChartView.h
   pqXYChartView.cxx
   pqXYChartView.h
+  pqXYFunctionalBagChartView.cxx
+  pqXYFunctionalBagChartView.h
   vtkPVGUIPluginInterface.cxx
   vtkPVGUIPluginInterface.h
 )
@@ -330,6 +332,7 @@ set (Module_MOC_HDRS
   pqXYBagChartView.h
   pqXYBarChartView.h
   pqXYBoxChartView.h
+  pqXYFunctionalBagChartView.h
   pqXYChartView.h
 )
 
