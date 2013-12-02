@@ -83,8 +83,7 @@ set(Module_SRCS
   vtkPSciVizDescriptiveStats.cxx
   vtkPSciVizKMeans.cxx
   vtkPSciVizMultiCorrelativeStats.cxx
-  vtkPSciVizPCAStats.cxx
-  vtkPTransposeTable.cxx
+  vtkPSciVizPCAStats.cxx  
   vtkPVAMRDualClip.cxx
   vtkPVAMRDualContour.cxx
   vtkPVArrayCalculator.cxx
@@ -98,6 +97,7 @@ set(Module_SRCS
   vtkPVEnSightMasterServerReader.cxx
   vtkPVEnSightMasterServerReader2.cxx
   vtkPVEnSightMasterServerTranslator.cxx
+  vtkPVExtractBoxPlots.cxx
   vtkPVExtractVOI.cxx
   vtkPVFrustumActor.cxx
   vtkPVGlyphFilter.cxx
@@ -110,6 +110,7 @@ set(Module_SRCS
   vtkPVSelectionSource.cxx
   vtkPVTextSource.cxx
   vtkPVTransform.cxx
+  vtkPVTransposeTable.cxx
   vtkQuerySelectionSource.cxx
   vtkRectilinearGridConnectivity.cxx
   vtkScatterPlotMapper.cxx

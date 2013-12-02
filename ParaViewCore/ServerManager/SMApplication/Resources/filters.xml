@@ -9326,7 +9326,7 @@ found and the point will be rejected.</Documentation>
       <!-- End ComputeQuartiles -->
     </SourceProxy>
     <!-- ==================================================================== -->
-    <SourceProxy class="vtkPTransposeTable"
+    <SourceProxy class="vtkPVTransposeTable"
                  label="Transpose Table"
                  name="TransposeTable">
       <Documentation long_help="Transpose a table."
@@ -9341,23 +9341,12 @@ found and the point will be rejected.</Documentation>
         <DataTypeDomain name="input_type">
           <DataType value="vtkTable" />
         </DataTypeDomain>
+        <InputArrayDomain attribute_type="row"
+                          name="input_aray"
+                          number_of_components="1"/>
         <Documentation>This property specifies the input to the
         filter.</Documentation>
       </InputProperty>
-      <IntVectorProperty command="SetAttributeMode"
-                         default_values="0"
-                         name="AttributeMode"
-                         number_of_elements="1">
-        <FieldDataDomain enable_field_data="1"
-                         name="enum">
-          <RequiredProperties>
-            <Property function="Input"
-                      name="Input" />
-          </RequiredProperties>
-        </FieldDataDomain>
-        <Documentation>Specify which type of field data the arrays will be
-        drawn from.</Documentation>
-      </IntVectorProperty>
       <StringVectorProperty clean_command="ClearAttributeArrays"
                             command="EnableAttributeArray"
                             label="Variables of Interest"
@@ -9368,8 +9357,6 @@ found and the point will be rejected.</Documentation>
           <RequiredProperties>
             <Property function="Input"
                       name="Input" />
-            <Property function="FieldDataSelection"
-                      name="AttributeMode" />
           </RequiredProperties>
         </ArrayListDomain>
         <Documentation>Choose arrays whose entries will be used to form
@@ -9391,6 +9378,61 @@ found and the point will be rejected.</Documentation>
         <Documentation>This flag indicates if the output column must be
           named using the names listed in the index 0 column.</Documentation>
       </IntVectorProperty>
+      <!-- End TransposeTable -->
+    </SourceProxy>
+    <!-- ==================================================================== -->
+    <SourceProxy class="vtkPVExtractBoxPlots"
+                 label="Extract Box Plots"
+                 name="ExtractBoxPlots">
+      <Documentation long_help="Extract Box Plots."
+                     short_help="Extract Box Plots.">
+                     </Documentation>
+      <InputProperty command="SetInputConnection"
+                    name="Input">
+        <ProxyGroupDomain name="groups">
+          <Group name="sources" />
+          <Group name="filters" />
+        </ProxyGroupDomain>
+        <DataTypeDomain name="input_type">
+          <DataType value="vtkTable" />
+        </DataTypeDomain>
+        <InputArrayDomain attribute_type="row"
+                          name="input_aray"
+                          number_of_components="1"/>
+        <Documentation>This property specifies the input to the
+        filter.</Documentation>
+      </InputProperty>
+      <StringVectorProperty clean_command="ClearAttributeArrays"
+                            command="EnableAttributeArray"
+                            label="Variables of Interest"
+                            name="SelectArrays"
+                            number_of_elements_per_command="1"
+                            repeat_command="1">
+        <ArrayListDomain name="array_list">
+          <RequiredProperties>
+            <Property function="Input"
+                      name="Input" />
+          </RequiredProperties>
+        </ArrayListDomain>
+        <Documentation>Choose arrays whose entries will be used to form
+        observations for statistical analysis.</Documentation>
+      </StringVectorProperty>
+      <IntVectorProperty command="SetTransposeTable"
+                         default_values="0"
+                         name="TransposeTable"
+                         number_of_elements="1">
+        <BooleanDomain name="bool" />
+        <Documentation>This flag indicates if the input table must
+        be transposed first.</Documentation>
+      </IntVectorProperty>
+       <DoubleVectorProperty command="SetSigma"
+                         default_values="1"
+                         name="Sigma"
+                         number_of_elements="1">
+        <DoubleRangeDomain name="range" />
+        <Documentation>Specify the smoothing kernel size of the
+        HDR.</Documentation>
+      </DoubleVectorProperty>
       <!-- End TransposeTable -->
     </SourceProxy>
     <!-- ==================================================================== -->

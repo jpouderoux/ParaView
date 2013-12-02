@@ -926,21 +926,21 @@
     <!-- ================================================================== -->
     <ContextViewProxy base_proxygroup="views"
                       base_proxyname="XYChartViewBase"
+                      class="vtkPVFunctionalBagChartView"
+                      name="XYFunctionalBagChartView"
+                      processes="client|renderserver|dataserver"
+                      representation_name="XYFunctionalBagChartRepresentation">
+      <Documentation>This is the proxy for functional bag chart
+      view.</Documentation>
+    </ContextViewProxy>
+    <!-- ================================================================== -->
+    <ContextViewProxy base_proxygroup="views"
+                      base_proxyname="XYChartViewBase"
                       class="vtkPVBagChartView"
                       name="XYBagChartView"
                       processes="client|renderserver|dataserver"
                       representation_name="XYBagChartRepresentation">
       <Documentation>This is the proxy for bag chart view.</Documentation>
-    </ContextViewProxy>
-    <!-- ================================================================== -->
-    <ContextViewProxy base_proxygroup="views"
-                      base_proxyname="XYChartViewBase"
-                      class="vtkPVFunctionalBagChartView"
-                      name="XYFunctionalBagChartView"
-                      processes="client|renderserver|dataserver"
-                      representation_name="XYFunctionalBagChartRepresentation">
-      <Documentation>This is the proxy for functioanl bag chart
-      view.</Documentation>
     </ContextViewProxy>
     <!-- ================================================================== -->
     <ContextViewProxy base_proxygroup="views"
@@ -4228,7 +4228,7 @@
       <SubProxy>
         <Proxy name="PlotOptions"
                proxygroup="options"
-               proxyname="XYFunctionBagPlotOptions"></Proxy>
+               proxyname="XYFunctionalBagPlotOptions"></Proxy>
         <ExposedProperties>
           <Property exposed_name="SeriesDensity"
                     name="Density" />

@@ -134,7 +134,8 @@ void vtkPVXYChartView::SetChartType(const char *type)
 
   // Construct the correct type of chart
   if (strcmp(type, "Line") == 0 || strcmp(type, "Bar") == 0 ||
-    strcmp(type, "Box") == 0 || strcmp(type, "Bag") == 0)
+    strcmp(type, "Box") == 0 || strcmp(type, "Bag") == 0 || 
+    strcmp(type, "FunctionalBag") == 0)
     {
     this->Chart = vtkChartXY::New();
     }

@@ -47,6 +47,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "pqXYBarChartView.h"
 #include "pqXYBoxChartView.h"
 #include "pqXYChartView.h"
+#include "pqXYFunctionalBagChartView.h"
 #include "vtkSMComparativeViewProxy.h"
 #include "vtkSMContextViewProxy.h"
 #include "vtkSMProxyManager.h"
@@ -76,6 +77,7 @@ QStringList pqStandardViewModules::viewTypes() const
     pqComparativeRenderView::comparativeRenderViewType() <<
     pqComparativeXYChartView::chartViewType() <<
     pqComparativeXYBarChartView::chartViewType() <<
+    pqXYFunctionalBagChartView::XYFunctionalBagChartViewType() <<
     pqParallelCoordinatesChartView::chartViewType() <<
     pqMultiSliceView::multiSliceViewType() <<
     pqPlotMatrixView::viewType();
@@ -88,6 +90,7 @@ QStringList pqStandardViewModules::displayTypes() const
     << "XYBagChartRepresentation"
     << "XYBarChartRepresentation"
     << "XYBoxChartRepresentation"
+    << "XYFunctionalChartRepresentation"
     << "TextSourceRepresentation"
     << "PlotMatrixRepresentation";
 }
@@ -129,6 +132,10 @@ QString pqStandardViewModules::viewTypeName(const QString& type) const
   else if (type == pqXYBoxChartView::XYBoxChartViewType())
     {
     return pqXYBoxChartView::XYBoxChartViewTypeName();
+    }
+  else if (type == pqXYFunctionalBagChartView::XYFunctionalBagChartViewType())
+    {
+    return pqXYFunctionalBagChartView::XYFunctionalBagChartViewTypeName();
     }
   else if (type == pqParallelCoordinatesChartView::chartViewType())
     {
@@ -191,6 +198,10 @@ vtkSMProxy* pqStandardViewModules::createViewProxy(const QString& viewtype,
   else if (viewtype == pqXYBoxChartView::XYBoxChartViewType())
     {
     root_xmlname = "XYBoxChartView";
+    }
+  else if (viewtype == pqXYFunctionalBagChartView::XYFunctionalBagChartViewType())
+    {
+    root_xmlname = "XYFunctionalBagChartView";
     }
   else if (viewtype == pqParallelCoordinatesChartView::chartViewType())
     {
@@ -292,6 +303,12 @@ pqView* pqStandardViewModules::createView(const QString& viewtype,
                                 vtkSMContextViewProxy::SafeDownCast(viewmodule),
                                 server, p);
     }
+  else if (viewtype == "XYFunctionalBagChartView")
+    {
+    return new pqXYFunctionalBagChartView(group, viewname,
+                                vtkSMContextViewProxy::SafeDownCast(viewmodule),
+                                server, p);
+    }
   else if (viewtype == "ParallelCoordinatesChartView")
     {
     return new pqParallelCoordinatesChartView(group, viewname,
@@ -322,6 +339,7 @@ pqDataRepresentation* pqStandardViewModules::createDisplay(const QString& displa
       display_type == "XYBagChartRepresentation" ||
       display_type == "XYBarChartRepresentation" ||
       display_type == "XYBoxChartRepresentation" ||
+      display_type == "XYFunctionalBagChartRepresentation" ||
       display_type == "PlotMatrixRepresentation")
     {
     // new chart representations.
