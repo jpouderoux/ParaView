@@ -85,6 +85,7 @@ public:
        type == "XYBagChartRepresentation" ||
        type == "XYBarChartRepresentation" ||
        type == "XYBoxChartRepresentation" ||
+       type == "XYFunctionalBagChartRepresentation" ||
        type == "BarChartRepresentation" ||
        type == "SpreadSheetRepresentation" ||
        qobject_cast<pqTextRepresentation*>(proxy)||

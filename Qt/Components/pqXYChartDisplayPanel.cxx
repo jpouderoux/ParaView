@@ -78,7 +78,7 @@ public:
     this->CompositeIndexAdaptor = 0;
     this->AttributeModeAdaptor = 0;
     
-    // Specific to Bag plot
+    // Specific to Bag plots
     this->DensityArrayDomain = 0;
     this->DensityArrayAdaptor = 0;
     this->DensityArrayConnection = vtkEventQtSlotConnect::New();
@@ -92,7 +92,7 @@ public:
     delete this->CompositeIndexAdaptor;
     delete this->AttributeModeAdaptor;
 
-    // Specific to Bag plot
+    // Specific to Bag plots
     delete this->DensityArrayDomain;
     delete this->DensityArrayAdaptor;
     this->DensityArrayConnection->Delete();
@@ -106,7 +106,7 @@ public:
   pqPropertyLinks Links;
   pqSignalAdaptorCompositeTreeWidget* CompositeIndexAdaptor;
 
-  // Specific to Bag plot
+  // Specific to Bag plots
   pqComboBoxDomain* DensityArrayDomain;
   pqSignalAdaptorComboBox* DensityArrayAdaptor;
   vtkEventQtSlotConnect* DensityArrayConnection;
@@ -296,7 +296,8 @@ void pqXYChartDisplayPanel::changeDialog(pqRepresentation* disp)
   this->Internal->MarkerStyleListLabel->setVisible(visible);
   this->Internal->XAxisDataGroup->setVisible(visible);
 
-  visible = (chartType == QString("Bag"));
+  visible = (chartType == QString("Bag") || 
+    chartType == QString("FunctionalBag"));
   this->Internal->DensityLabel->setVisible(visible);
   this->Internal->DensityArray->setVisible(visible);
 }
@@ -366,11 +367,12 @@ void pqXYChartDisplayPanel::updateOptionsWidgets()
       this->Internal->AxisList->setCurrentIndex(
         this->Internal->SettingsModel->getSeriesAxisCorner(seriesIndex));
 
-      if (chartType == "Bag")
+      if (chartType == "Bag" || chartType == "FunctionalBag")
         {
-        QString bagName = this->Internal->SettingsModel->getSeriesDensity(seriesIndex);
+        QString densityName = 
+          this->Internal->SettingsModel->getSeriesDensity(seriesIndex);
         this->Internal->DensityArray->setCurrentIndex(
-          this->Internal->DensityArray->findText(bagName));
+          this->Internal->DensityArray->findText(densityName));
         }
       }
     else
@@ -422,9 +424,9 @@ void pqXYChartDisplayPanel::setCurrentSeriesColor(const QColor &color)
 }
 
 //-----------------------------------------------------------------------------
-void pqXYChartDisplayPanel::setCurrentSeriesDensity(const QString &newBag)
+void pqXYChartDisplayPanel::setCurrentSeriesDensity(const QString &newDensity)
 {
-  if (!newBag.isEmpty())
+  if (!newDensity.isEmpty())
     {
     QItemSelectionModel *model = this->Internal->SeriesList->selectionModel();
       if (model)

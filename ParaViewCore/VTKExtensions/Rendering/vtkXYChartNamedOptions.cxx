@@ -52,10 +52,7 @@ public:
   int Visible;
   int Corner;
   double Color[3];
-  // Specific for BoxPlot: each column can be seen as the median
-  // we store reference on it associated quartiles.
-  vtkStdString Q0, Q1, Q3, Q4;
-  vtkStdString Density;
+  vtkStdString Density; // For bagplots
 
   PlotInfo()
     {
@@ -85,10 +82,6 @@ public:
     this->Plots = p.Plots;
     this->Tables = p.Tables;
     this->Corner = p.Corner;
-    this->Q0 = p.Q0;
-    this->Q1 = p.Q1;
-    this->Q3 = p.Q3;
-    this->Q4 = p.Q4;
     this->Density = p.Density;
     }
 };
@@ -296,14 +289,6 @@ void vtkXYChartNamedOptions::RefreshPlots()
           plotInfo.Visible = defaultVisible;
           }
 
-        // In case of box plot, we need to set correctly q0, q1, q3, q4
-        if (table->GetNumberOfColumns() > 5)
-          {
-          plotInfo.Q0 = table->GetColumnName(1);
-          plotInfo.Q1 = table->GetColumnName(2);
-          plotInfo.Q3 = table->GetColumnName(4);
-          plotInfo.Q4 = table->GetColumnName(5);
-          }
         if (table->GetNumberOfColumns() > 2)
           {
           plotInfo.Density = table->GetColumnName(2);
@@ -501,36 +486,6 @@ void vtkXYChartNamedOptions::SetAxisCorner(const char* name, int value)
         chart->SetPlotCorner(plotInfo.Plots[i], value);
         }
       }
-    }
-}
-
-//----------------------------------------------------------------------------
-void vtkXYChartNamedOptions::SetQuartiles(const char *median,
-  const char *q0, const char *q1, const char *q3, const char *q4)
-{
-  PlotInfo& plotInfo = this->GetPlotInfo(median);
-  plotInfo.Q0 = q0;
-  plotInfo.Q1 = q1;
-  plotInfo.Q3 = q3;
-  plotInfo.Q4 = q4;
-
-  // If the quartiles column is changed, the range will changes
-  vtkPlotBox *box = NULL;
-  for (size_t i = 0; i < plotInfo.Plots.size(); i++)
-    {
-    box = vtkPlotBox::SafeDownCast(plotInfo.Plots[i]);
-    if (box)
-      {
-      box->SetInputArray(1, q0);
-      box->SetInputArray(2, q1);
-      box->SetInputArray(3, median);
-      box->SetInputArray(4, q3);
-      box->SetInputArray(5, q4);
-      }
-    }
-  if (this->Chart)
-    {
-    this->Chart->RecalculateBounds();
     }
 }
 

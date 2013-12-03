@@ -3062,6 +3062,34 @@
       </StringVectorProperty>
       <!-- End of XYBagPlotOptions -->
     </ContextNamedOptionsProxy>
+
+    <ContextNamedOptionsProxy base_proxygroup="options"
+                              base_proxyname="XYPlotOptions"
+                              class="vtkXYChartNamedOptions"
+                              name="XYFunctionalBagPlotOptions"
+                              processes="client|dataserver|renderserver">
+      <StringVectorProperty information_only="1"
+                              name="BagInfo"
+                              number_of_elements_per_command="2"
+                              repeat_command="1">
+        <Documentation>
+          Property which has the current state of bag column name for
+          the series available currently.
+        </Documentation>
+      </StringVectorProperty>
+      <StringVectorProperty command="SetDensity"
+                            element_types="2 2"
+                            information_property="BagInfo"
+                            name="Density"
+                            number_of_elements_per_command="2"
+                            repeat_command="1">
+        <Documentation>
+          Set the series to use for each bag as tuples of the
+          form (name-series, density-series)
+        </Documentation>
+      </StringVectorProperty>
+      <!-- End of XYFunctionalBagPlotOptions -->
+    </ContextNamedOptionsProxy>
   </ProxyGroup>
 
   <ProxyGroup name="coprocessing">

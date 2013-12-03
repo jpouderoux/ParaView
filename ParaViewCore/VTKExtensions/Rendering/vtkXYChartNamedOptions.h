@@ -62,13 +62,6 @@ public:
   void SetUseIndexForXAxis(bool useIndex);
 
   // Description:
-  // Set quartiles to be used for the series with the given median,
-  // if NULL do noting.
-  // This method is only useful for box type.
-  void SetQuartiles(const char* median,
-    const char* q0, const char* q1, const char* q3, const char* q4);
-
-  // Description:
   // Hides or plots that belong to this table.  When showing,
   // only plots that are actually marked visible will be shown.
   void SetTableVisibility(bool visible);

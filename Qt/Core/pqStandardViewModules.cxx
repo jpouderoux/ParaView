@@ -90,7 +90,7 @@ QStringList pqStandardViewModules::displayTypes() const
     << "XYBagChartRepresentation"
     << "XYBarChartRepresentation"
     << "XYBoxChartRepresentation"
-    << "XYFunctionalChartRepresentation"
+    << "XYFunctionalBagChartRepresentation"
     << "TextSourceRepresentation"
     << "PlotMatrixRepresentation";
 }

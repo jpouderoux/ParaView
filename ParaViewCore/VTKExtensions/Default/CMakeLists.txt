@@ -97,7 +97,7 @@ set(Module_SRCS
   vtkPVEnSightMasterServerReader.cxx
   vtkPVEnSightMasterServerReader2.cxx
   vtkPVEnSightMasterServerTranslator.cxx
-  vtkPVExtractBoxPlots.cxx
+  vtkPVExtractBagPlots.cxx
   vtkPVExtractVOI.cxx
   vtkPVFrustumActor.cxx
   vtkPVGlyphFilter.cxx

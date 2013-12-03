@@ -69,6 +69,7 @@ bool pqStandardLegacyDisplayPanels::canCreatePanel(pqRepresentation* proxy) cons
     type == "XYBagChartRepresentation" ||
     type == "XYBarChartRepresentation" ||
     type == "XYBoxChartRepresentation" ||
+    type == "XYFunctionalBagChartRepresentation" ||
     type == "BarChartRepresentation" ||
     type == "SpreadSheetRepresentation" ||
     qobject_cast<pqTextRepresentation*>(proxy)||
@@ -95,7 +96,8 @@ pqDisplayPanel* pqStandardLegacyDisplayPanels::createPanel(pqRepresentation* pro
   if (type == QString("XYChartRepresentation") ||
       type == QString("XYBagChartRepresentation") ||
       type == QString("XYBarChartRepresentation") ||
-      type == QString("XYBoxChartRepresentation"))
+      type == QString("XYBoxChartRepresentation") || 
+      type == QString("XYFunctionalBagChartRepresentation"))
     {
     return new pqXYChartDisplayPanel(proxy, p);
     }

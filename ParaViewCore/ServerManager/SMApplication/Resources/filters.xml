@@ -9365,6 +9365,7 @@ found and the point will be rejected.</Documentation>
       <IntVectorProperty command="SetAddIdColumn"
                          default_values="1"
                          name="AddIdColumn"
+                         label="Add a column with original columns name"
                          number_of_elements="1">
         <BooleanDomain name="bool" />
         <Documentation>This flag indicates if a column must be inserted
@@ -9373,19 +9374,30 @@ found and the point will be rejected.</Documentation>
       <IntVectorProperty command="SetUseIdColumn"
                          default_values="0"
                          name="UseIdColumn"
+                         label="Use the column with original columns name"
                          number_of_elements="1">
         <BooleanDomain name="bool" />
         <Documentation>This flag indicates if the output column must be
           named using the names listed in the index 0 column.</Documentation>
       </IntVectorProperty>
+      <IntVectorProperty command="SetDoNotTranspose"
+                         default_values="0"
+                         name="DoNotTranspose"
+                         label="Only extract selected columns"
+                         number_of_elements="1">
+        <BooleanDomain name="bool" />
+        <Documentation>This flag indicates if the sub-table must be
+        effectively transposed or not.</Documentation>
+      </IntVectorProperty>
       <!-- End TransposeTable -->
     </SourceProxy>
     <!-- ==================================================================== -->
-    <SourceProxy class="vtkPVExtractBoxPlots"
-                 label="Extract Box Plots"
-                 name="ExtractBoxPlots">
-      <Documentation long_help="Extract Box Plots."
-                     short_help="Extract Box Plots.">
+    <SourceProxy class="vtkPVExtractBagPlots"
+                 label="Extract Bag Plots"
+                 name="ExtractBagPlots">
+      <Documentation long_help="Extract Bag Plots."
+                     short_help="Extract tables used to display Bag Plots
+                     views.">
                      </Documentation>
       <InputProperty command="SetInputConnection"
                     name="Input">
@@ -9420,6 +9432,7 @@ found and the point will be rejected.</Documentation>
       <IntVectorProperty command="SetTransposeTable"
                          default_values="0"
                          name="TransposeTable"
+                         label="Process the transposed of the input table"
                          number_of_elements="1">
         <BooleanDomain name="bool" />
         <Documentation>This flag indicates if the input table must
@@ -9428,12 +9441,20 @@ found and the point will be rejected.</Documentation>
        <DoubleVectorProperty command="SetSigma"
                          default_values="1"
                          name="Sigma"
+                         label="HDR smoothing parameter"
                          number_of_elements="1">
         <DoubleRangeDomain name="range" />
-        <Documentation>Specify the smoothing kernel size of the
+        <Documentation>Specify the smoothing parameter of the
         HDR.</Documentation>
       </DoubleVectorProperty>
-      <!-- End TransposeTable -->
+      <!-- View can be used to specify the preferred view for the proxy -->
+      <Hints>
+        <Visibility replace_input="0" />
+        <View type="XYBagChartView" />
+        <View type="XYFunctionalBagChartView" />
+        <Plotable />
+      </Hints>
+      <!-- End ExtractBoxPlots -->
     </SourceProxy>
     <!-- ==================================================================== -->
     <SourceProxy class="vtkPassThrough"
@@ -11744,9 +11765,10 @@ found and the point will be rejected.</Documentation>
       <DoubleVectorProperty command="SetSigma"
                          default_values="1"
                          name="Sigma"
+                         label="HDR smoothing parameter"
                          number_of_elements="1">
         <DoubleRangeDomain name="range" />
-        <Documentation>Specify the smoothing kernel size.</Documentation>
+        <Documentation>Specify the smoothing parameter.</Documentation>
       </DoubleVectorProperty>
       <IntVectorProperty command="SetAttributeMode"
                          default_values="0"

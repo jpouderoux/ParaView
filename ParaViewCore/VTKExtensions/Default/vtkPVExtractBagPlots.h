@@ -1,7 +1,7 @@
 /*=========================================================================
 
   Program:   ParaView
-  Module:    vtkPVExtractBoxPlots.h
+  Module:    vtkPVExtractBagPlots.h
 
   Copyright (c) Kitware, Inc.
   All rights reserved.
@@ -12,23 +12,23 @@
      PURPOSE.  See the above copyright notice for more information.
 
 =========================================================================*/
-// .NAME vtkPVExtractBoxPlots
+// .NAME vtkPVExtractBagPlots
 //
 // .SECTION Description
 
-#ifndef __vtkPVExtractBoxPlots_h
-#define __vtkPVExtractBoxPlots_h
+#ifndef __vtkPVExtractBagPlots_h
+#define __vtkPVExtractBagPlots_h
 
 #include "vtkPVVTKExtensionsDefaultModule.h" //needed for exports
 #include "vtkTransposeTable.h"
 
-class PVExtractBoxPlotsInternal;
+class PVExtractBagPlotsInternal;
 
-class VTKPVVTKEXTENSIONSDEFAULT_EXPORT vtkPVExtractBoxPlots : public vtkTransposeTable
+class VTKPVVTKEXTENSIONSDEFAULT_EXPORT vtkPVExtractBagPlots : public vtkTransposeTable
 {
 public:
-  static vtkPVExtractBoxPlots* New();
-  vtkTypeMacro(vtkPVExtractBoxPlots, vtkTransposeTable);
+  static vtkPVExtractBagPlots* New();
+  vtkTypeMacro(vtkPVExtractBagPlots, vtkTransposeTable);
   virtual void PrintSelf(ostream& os, vtkIndent indent);
 
   // Description:
@@ -44,21 +44,21 @@ public:
   vtkSetMacro(Sigma, double);
   
 protected:
-  vtkPVExtractBoxPlots();
-  virtual ~vtkPVExtractBoxPlots();
+  vtkPVExtractBagPlots();
+  virtual ~vtkPVExtractBagPlots();
 
   int RequestData(vtkInformation*,
     vtkInformationVector**,
     vtkInformationVector*);
 
-  PVExtractBoxPlotsInternal* Internal;
+  PVExtractBagPlotsInternal* Internal;
   
   bool TransposeTable;
   double Sigma;
 
 private:
-  vtkPVExtractBoxPlots( const vtkPVExtractBoxPlots& ); // Not implemented.
-  void operator = ( const vtkPVExtractBoxPlots& ); // Not implemented.
+  vtkPVExtractBagPlots( const vtkPVExtractBagPlots& ); // Not implemented.
+  void operator = ( const vtkPVExtractBagPlots& ); // Not implemented.
 };
 
-#endif // __vtkPVExtractBoxPlots_h
+#endif // __vtkPVExtractBagPlots_h

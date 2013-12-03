@@ -12,9 +12,13 @@
      PURPOSE.  See the above copyright notice for more information.
 
 =========================================================================*/
-// .NAME vtkPVTransposeTable
+// .NAME vtkPVTransposeTable - create a subtable made with selected 
+// columns of the input vtkTable and transpose it.
 //
 // .SECTION Description
+// This ParaView filter allows to select the columns of the input table
+// that must be included in the transposed table. This filter can also
+// be use to extract a non transposed table made by the selected columns.
 
 #ifndef __vtkPVTransposeTable_h
 #define __vtkPVTransposeTable_h
@@ -35,6 +39,13 @@ public:
   // Interface for preparing selection of arrays in ParaView.
   void EnableAttributeArray(const char*);
   void ClearAttributeArrays();
+
+  // Description:
+  // Can be used to bypass the transposition code. The output
+  // is then the table made with the selected columns.
+  vtkGetMacro(DoNotTranspose, bool);
+  vtkSetMacro(DoNotTranspose, bool);
+  vtkBooleanMacro(DoNotTranspose, bool);
   
 protected:
   vtkPVTransposeTable();
@@ -45,6 +56,8 @@ protected:
     vtkInformationVector*);
 
   PVTransposeTableInternal* Internal;
+
+  bool DoNotTranspose;
 
 private:
   vtkPVTransposeTable( const vtkPVTransposeTable& ); // Not implemented.

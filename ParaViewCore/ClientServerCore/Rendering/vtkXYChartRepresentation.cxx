@@ -104,6 +104,10 @@ void vtkXYChartRepresentation::SetChartType(const char *type)
     {
     this->XYOptions->SetChartType(vtkChart::BOX);
     }
+  else if (strcmp(type, "FunctionalBag") == 0)
+    {
+    this->XYOptions->SetChartType(vtkChart::FUNCTIONALBAG);
+    }
 }
 
 //----------------------------------------------------------------------------

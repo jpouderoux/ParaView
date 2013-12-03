@@ -47,6 +47,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "pqXYBagChartView.h"
 #include "pqXYBarChartView.h"
 #include "pqXYBoxChartView.h"
+#include "pqXYFunctionalBagChartView.h"
 #include "pqXYChartView.h"
 
 //-----------------------------------------------------------------------------
@@ -63,10 +64,13 @@ pqViewSettingsManager::pqViewSettingsManager(QObject* parentObject)
   pqActiveXYChartOptions *xyBagChartOptions = new pqActiveXYChartOptions(this);
   pqActiveXYChartOptions *xyBarChartOptions = new pqActiveXYChartOptions(this);
   pqActiveXYChartOptions *xyBoxChartOptions = new pqActiveXYChartOptions(this);
+  pqActiveXYChartOptions *xyFunctionalBagChartOptions = new pqActiveXYChartOptions(this);
   this->registerOptions(pqXYChartView::XYChartViewType(), xyChartOptions);
   this->registerOptions(pqXYBagChartView::XYBagChartViewType(), xyBagChartOptions);
   this->registerOptions(pqXYBarChartView::XYBarChartViewType(), xyBarChartOptions);
   this->registerOptions(pqXYBoxChartView::XYBoxChartViewType(), xyBoxChartOptions);
+  this->registerOptions(pqXYFunctionalBagChartView::XYFunctionalBagChartViewType(), 
+    xyFunctionalBagChartOptions);
 
   // register for comparative views.
   this->registerOptions(pqComparativeXYChartView::chartViewType(), xyChartOptions);

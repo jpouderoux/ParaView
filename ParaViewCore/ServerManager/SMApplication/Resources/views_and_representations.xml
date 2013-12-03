@@ -3697,10 +3697,6 @@
         <Documentation>This property lists the ids of the blocks to extract
         from the input multiblock dataset.</Documentation>
       </IntVectorProperty>
-
-
-
-
       <StringVectorProperty element_types="2"
                             information_only="1"
                             name="SeriesNamesInfo"

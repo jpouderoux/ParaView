@@ -49,6 +49,7 @@ vtkStandardNewMacro(vtkPVTransposeTable);
 vtkPVTransposeTable::vtkPVTransposeTable()
 {
   this->Internal = new PVTransposeTableInternal();
+  this->DoNotTranspose = false;
 }
 
 //----------------------------------------------------------------------------
@@ -120,7 +121,7 @@ int vtkPVTransposeTable::RequestData(vtkInformation*,
     }
 
   // Now transpose the subtable
-  if (subTable->GetNumberOfColumns() > 0)
+  if (subTable->GetNumberOfColumns() > 0 && !this->DoNotTranspose)
     {
     vtkNew<vtkTransposeTable> transpose;
     transpose->SetInputData(subTable.GetPointer());
@@ -130,6 +131,10 @@ int vtkPVTransposeTable::RequestData(vtkInformation*,
     transpose->Update();
 
     outTable->ShallowCopy(transpose->GetOutput());
+    }
+  if (this->DoNotTranspose)
+    {
+    outTable->ShallowCopy(subTable.GetPointer());
     }
 
   return 1;

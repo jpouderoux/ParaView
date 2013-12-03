@@ -96,14 +96,14 @@ void pqChartRepresentation::setDefaultPropertyValues()
       }
     y_array = "bin_values";
     }
-  else if (series_arrays.contains("q2"))
+  else if (series_arrays.contains("y"))
     {
-    // typically implies that the output is from a compute quantiles filter.
+    // typically implies that the output is from an extract bag plots filter.
     if (series_arrays.contains("x"))
       {
       x_array = "x";
       }
-    y_array = "q2";
+    y_array = "y";
     }
   else if (series_arrays.contains(QVariant("Time")))
     {

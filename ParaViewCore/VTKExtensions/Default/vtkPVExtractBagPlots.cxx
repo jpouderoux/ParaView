@@ -1,4 +1,4 @@
-#include "vtkPVExtractBoxPlots.h"
+#include "vtkPVExtractBagPlots.h"
 
 #include "vtkAbstractArray.h"
 #include "vtkInformation.h"
@@ -17,7 +17,7 @@
 
 //----------------------------------------------------------------------------
 // Internal class that holds selected columns
-class PVExtractBoxPlotsInternal
+class PVExtractBagPlotsInternal
 {
 public:
   bool Clear()
@@ -49,25 +49,25 @@ public:
 };
 
 //----------------------------------------------------------------------------
-vtkStandardNewMacro(vtkPVExtractBoxPlots);
+vtkStandardNewMacro(vtkPVExtractBagPlots);
 
 //----------------------------------------------------------------------------
-vtkPVExtractBoxPlots::vtkPVExtractBoxPlots()
+vtkPVExtractBagPlots::vtkPVExtractBagPlots()
 {
   this->Sigma = 1.;
   this->TransposeTable = false;
-  this->Internal = new PVExtractBoxPlotsInternal();
+  this->Internal = new PVExtractBagPlotsInternal();
   this->SetNumberOfOutputPorts(2);
 }
 
 //----------------------------------------------------------------------------
-vtkPVExtractBoxPlots::~vtkPVExtractBoxPlots()
+vtkPVExtractBagPlots::~vtkPVExtractBagPlots()
 {
   delete this->Internal;
 }
 
 //----------------------------------------------------------------------------
-void vtkPVExtractBoxPlots::EnableAttributeArray(const char* arrName)
+void vtkPVExtractBagPlots::EnableAttributeArray(const char* arrName)
 {
   if (arrName)
     {
@@ -79,7 +79,7 @@ void vtkPVExtractBoxPlots::EnableAttributeArray(const char* arrName)
 }
 
 //----------------------------------------------------------------------------
-void vtkPVExtractBoxPlots::ClearAttributeArrays()
+void vtkPVExtractBagPlots::ClearAttributeArrays()
 {
   if (this->Internal->Clear())
     {
@@ -88,13 +88,13 @@ void vtkPVExtractBoxPlots::ClearAttributeArrays()
 }
 
 //----------------------------------------------------------------------------
-void vtkPVExtractBoxPlots::PrintSelf(ostream& os, vtkIndent indent)
+void vtkPVExtractBagPlots::PrintSelf(ostream& os, vtkIndent indent)
 {
   this->Superclass::PrintSelf(os, indent);
 }
 
 //----------------------------------------------------------------------------
-int vtkPVExtractBoxPlots::RequestData(vtkInformation*,
+int vtkPVExtractBagPlots::RequestData(vtkInformation*,
                                      vtkInformationVector** inputVector,
                                      vtkInformationVector* outputVector)
 {
@@ -176,16 +176,16 @@ int vtkPVExtractBoxPlots::RequestData(vtkInformation*,
       if (strstr(str, "(0)"))
         {
         x = std::string(str);
-        arr->SetName("X");
+        arr->SetName("x");
         }
       else 
         {
         y = std::string(str);
-        arr->SetName("Y");
+        arr->SetName("y");
         }
       }
     }
-  hdr->AddColumnPair("X", "Y");
+  hdr->AddColumnPair("x", "y");
   hdr->SetLearnOption(true);
   hdr->SetDeriveOption(true);
   hdr->SetAssessOption(false);
