@@ -19,8 +19,6 @@
 #include "vtkChartXY.h"
 #include "vtkPlot.h"
 #include "vtkPlotBag.h"
-#include "vtkPlotBox.h"
-#include "vtkPlotFunctionalBag.h"
 #include "vtkPlotLine.h"
 #include "vtkAxis.h"
 #include "vtkPen.h"
@@ -364,12 +362,6 @@ void vtkXYChartNamedOptions::SetPlotVisibilityInternal(PlotInfo& plotInfo,
             this->Internals->XSeriesName.c_str(),
             seriesName, plotInfo.Density);
           }
-        else if (vtkPlotFunctionalBag *density = vtkPlotFunctionalBag::SafeDownCast(plot))
-          {
-          density->SetUseIndexForXSeries(this->Internals->UseIndexForXAxis);
-          density->SetInputData(plotInfo.Tables[i]);
-          density->SetInputDensityData(plotInfo.Tables[i], plotInfo.Density);
-          }
         else
           {
           // Must downcast to set the marker style...
@@ -502,16 +494,6 @@ void vtkXYChartNamedOptions::SetDensity(const char *name, const char *density)
       {
       currentBag->SetInputArray(1, name);
       currentBag->SetInputArray(2, density);
-      }
-    else
-      {
-      vtkPlotFunctionalBag* currentBag =
-        vtkPlotFunctionalBag::SafeDownCast(plotInfo.Plots[i]);
-      if (currentBag)
-        {
-        currentBag->SetInputArray(1, name);
-        currentBag->SetInputArray(2, density);
-        }
       }
     }
 }

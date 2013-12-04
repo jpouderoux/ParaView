@@ -47,7 +47,7 @@ public:
   static QString XYBagChartViewType() { return "XYBagChartView"; }
   static QString XYBagChartViewTypeName() { return "Bag Chart View"; }
   /// Currently the Bag chart view is not supporting selection.
-  virtual bool supportsSelection() const { return true; }
+  virtual bool supportsSelection() const { return false; }
 
 public:
   pqXYBagChartView(const QString& group,

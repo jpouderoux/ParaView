@@ -1,16 +1,18 @@
 #include "vtkPVExtractBagPlots.h"
 
 #include "vtkAbstractArray.h"
+#include "vtkExtractFunctionalBagPlot.h"
+#include "vtkHighestDensityRegionsStatistics.h"
 #include "vtkInformation.h"
 #include "vtkInformationVector.h"
 #include "vtkMultiBlockDataSet.h"
 #include "vtkNew.h"
 #include "vtkObjectFactory.h"
-#include "vtkTable.h"
-#include "vtkTransposeTable.h"
 #include "vtkPCAStatistics.h"
 #include "vtkPSciVizPCAStats.h"
-#include "vtkHighestDensityRegionsStatistics.h"
+#include "vtkStringArray.h"
+#include "vtkTable.h"
+#include "vtkTransposeTable.h"
 
 #include <set>
 #include <string>
@@ -21,22 +23,22 @@ class PVExtractBagPlotsInternal
 {
 public:
   bool Clear()
-  { 
+  {
     if (this->Columns.empty())
       {
       return false;
       }
     this->Columns.clear();
-    return true; 
+    return true;
   }
 
   bool Has(const std::string& v)
-  { 
+  {
     return this->Columns.find(v) != this->Columns.end();
   }
 
   bool Set(const std::string& v)
-  { 
+  {
   if (this->Has(v))
     {
     return false;
@@ -101,32 +103,31 @@ int vtkPVExtractBagPlots::RequestData(vtkInformation*,
   vtkTable* inTable = vtkTable::GetData(inputVector[0]);
   vtkTable* outTable = vtkTable::GetData(outputVector, 0);
   vtkTable* outTable2 = vtkTable::GetData(outputVector, 1);
-  
+
   if (inTable->GetNumberOfColumns() == 0)
-    {    
+    {
     return 1;
     }
 
-  
   vtkNew<vtkTransposeTable> transpose;
 
   // Construct a table that holds only the selected columns
   vtkNew<vtkTable> subTable;
   std::set<std::string>::iterator iter = this->Internal->Columns.begin();
   for (; iter!=this->Internal->Columns.end(); ++iter)
-    {    
+    {
     if (vtkAbstractArray* arr = inTable->GetColumnByName(iter->c_str()))
       {
       subTable->AddColumn(arr);
       }
     }
-  
+
   vtkTable *inputTable = subTable.GetPointer();
 
   outTable->ShallowCopy(subTable.GetPointer());
-  
+
   if (this->TransposeTable)
-    {    
+    {
     transpose->SetInputData(subTable.GetPointer());
     transpose->SetAddIdColumn(true);
     transpose->SetIdColumnName("ColName");
@@ -136,9 +137,9 @@ int vtkPVExtractBagPlots::RequestData(vtkInformation*,
     }
 
   outTable2->ShallowCopy(inputTable);
-  
+
   // Compute PCA
-    
+
   vtkNew<vtkPSciVizPCAStats> pca;
   pca->SetInputData(inputTable);
   pca->SetAttributeMode(vtkDataObject::ROW);
@@ -150,18 +151,18 @@ int vtkPVExtractBagPlots::RequestData(vtkInformation*,
       pca->EnableAttributeArray(arr->GetName());
       }
     }
-    
+
   pca->SetBasisScheme(vtkPCAStatistics::FIXED_BASIS_SIZE);
   pca->SetFixedBasisSize(2);
   pca->Update();
-  
+
   vtkTable* outputPCATable = vtkTable::SafeDownCast(
     pca->GetOutputDataObject(vtkStatisticsAlgorithm::OUTPUT_MODEL));
 
   outTable2->ShallowCopy(outputPCATable);
-  
+
   // Compute HDR
-  
+
   vtkNew<vtkHighestDensityRegionsStatistics> hdr;
   hdr->SetInputData(vtkStatisticsAlgorithm::INPUT_DATA, outputPCATable);
   hdr->SetSigma(this->Sigma);
@@ -178,7 +179,7 @@ int vtkPVExtractBagPlots::RequestData(vtkInformation*,
         x = std::string(str);
         arr->SetName("x");
         }
-      else 
+      else
         {
         y = std::string(str);
         arr->SetName("y");
@@ -191,12 +192,33 @@ int vtkPVExtractBagPlots::RequestData(vtkInformation*,
   hdr->SetAssessOption(false);
   hdr->SetTestOption(false);
   hdr->Update();
-  
+
   vtkMultiBlockDataSet* outputHDR = vtkMultiBlockDataSet::SafeDownCast(
     hdr->GetOutputDataObject(vtkStatisticsAlgorithm::OUTPUT_MODEL));
   vtkTable* outputHDRTable = vtkTable::SafeDownCast(outputHDR->GetBlock(0));
-
   outTable2->ShallowCopy(outputHDRTable);
+/*
+  vtkNew<vtkStringArray> varNames;
+  varNames->SetName("Series");
+  varNames->SetNumberOfValues(inputTable->GetNumberOfColumns());
+   for (vtkIdType i = 0; i < inputTable->GetNumberOfColumns(); i++)
+    {
+    varNames->SetValue(i, inputTable->GetColumn(i)->GetName());
+    }*/
+
+  outputHDRTable->AddColumn(inputTable->GetColumnByName("ColName"));
+
+  vtkNew<vtkExtractFunctionalBagPlot> ebp;
+  ebp->SetInputData(0, outTable);
+  ebp->SetInputData(1, outputHDRTable);
+  ebp->SetInputArrayToProcess(0, 1, 0,
+    vtkDataObject::FIELD_ASSOCIATION_ROWS, "HDR");
+  ebp->SetInputArrayToProcess(1, 1, 0,
+    vtkDataObject::FIELD_ASSOCIATION_ROWS, "ColName");
+  ebp->Update();
+
+  vtkTable* outBPTable = ebp->GetOutput();
+  outTable->ShallowCopy(outBPTable);
 
   return 1;
 }
