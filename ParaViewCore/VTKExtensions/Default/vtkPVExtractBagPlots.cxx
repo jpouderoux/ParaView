@@ -154,6 +154,8 @@ int vtkPVExtractBagPlots::RequestData(vtkInformation*,
 
   pca->SetBasisScheme(vtkPCAStatistics::FIXED_BASIS_SIZE);
   pca->SetFixedBasisSize(2);
+  pca->SetTrainingFraction(1.0);
+  //pca->RobustPCAOn();
   pca->Update();
 
   vtkTable* outputPCATable = vtkTable::SafeDownCast(
@@ -197,22 +199,15 @@ int vtkPVExtractBagPlots::RequestData(vtkInformation*,
     hdr->GetOutputDataObject(vtkStatisticsAlgorithm::OUTPUT_MODEL));
   vtkTable* outputHDRTable = vtkTable::SafeDownCast(outputHDR->GetBlock(0));
   outTable2->ShallowCopy(outputHDRTable);
-/*
-  vtkNew<vtkStringArray> varNames;
-  varNames->SetName("Series");
-  varNames->SetNumberOfValues(inputTable->GetNumberOfColumns());
-   for (vtkIdType i = 0; i < inputTable->GetNumberOfColumns(); i++)
-    {
-    varNames->SetValue(i, inputTable->GetColumn(i)->GetName());
-    }*/
 
   outputHDRTable->AddColumn(inputTable->GetColumnByName("ColName"));
 
+  // Extract the bag plot columns for functional bag plots
   vtkNew<vtkExtractFunctionalBagPlot> ebp;
   ebp->SetInputData(0, outTable);
   ebp->SetInputData(1, outputHDRTable);
   ebp->SetInputArrayToProcess(0, 1, 0,
-    vtkDataObject::FIELD_ASSOCIATION_ROWS, "HDR");
+    vtkDataObject::FIELD_ASSOCIATION_ROWS, "HDR (y,x)");
   ebp->SetInputArrayToProcess(1, 1, 0,
     vtkDataObject::FIELD_ASSOCIATION_ROWS, "ColName");
   ebp->Update();

@@ -77,7 +77,7 @@ public:
     this->XAxisArrayAdaptor = 0;
     this->CompositeIndexAdaptor = 0;
     this->AttributeModeAdaptor = 0;
-    
+
     // Specific to Bag plots
     this->DensityArrayDomain = 0;
     this->DensityArrayAdaptor = 0;
@@ -157,7 +157,7 @@ pqXYChartDisplayPanel::pqXYChartDisplayPanel(
   QObject::connect(this->Internal->UseDataArray, SIGNAL(toggled(bool)),
     this, SLOT(useDataArrayToggled(bool)));
 
-  
+
   QObject::connect(this->Internal->DensityArray,
     SIGNAL(currentIndexChanged(const QString&)),
     this, SLOT(setCurrentSeriesDensity(const QString&)));
@@ -249,7 +249,7 @@ void pqXYChartDisplayPanel::setDisplay(pqRepresentation* disp)
   this->Internal->Links.addPropertyLink(this->Internal->XAxisArrayAdaptor,
     "currentText", SIGNAL(currentTextChanged(const QString&)),
     proxy, proxy->GetProperty("XArrayName"));
-  
+
   this->Internal->DensityArrayConnection->Connect(
     proxy->GetProperty("SeriesNamesInfo"), vtkCommand::ModifiedEvent,
     this, SLOT(fillDensityArray()));
@@ -288,7 +288,7 @@ void pqXYChartDisplayPanel::changeDialog(pqRepresentation* disp)
   this->Internal->ThicknessLabel->setVisible(visible);
   this->Internal->AxisList->setVisible(visible);
   this->Internal->AxisListLabel->setVisible(visible);
-  
+
   visible = (chartType != QString("Box"));
   this->Internal->StyleList->setVisible(visible);
   this->Internal->StyleListLabel->setVisible(visible);
@@ -296,8 +296,7 @@ void pqXYChartDisplayPanel::changeDialog(pqRepresentation* disp)
   this->Internal->MarkerStyleListLabel->setVisible(visible);
   this->Internal->XAxisDataGroup->setVisible(visible);
 
-  visible = (chartType == QString("Bag") || 
-    chartType == QString("FunctionalBag"));
+  visible = (chartType == QString("Bag"));
   this->Internal->DensityLabel->setVisible(visible);
   this->Internal->DensityArray->setVisible(visible);
 }
@@ -367,9 +366,9 @@ void pqXYChartDisplayPanel::updateOptionsWidgets()
       this->Internal->AxisList->setCurrentIndex(
         this->Internal->SettingsModel->getSeriesAxisCorner(seriesIndex));
 
-      if (chartType == "Bag" || chartType == "FunctionalBag")
+      if (chartType == "Bag")
         {
-        QString densityName = 
+        QString densityName =
           this->Internal->SettingsModel->getSeriesDensity(seriesIndex);
         this->Internal->DensityArray->setCurrentIndex(
           this->Internal->DensityArray->findText(densityName));
@@ -382,7 +381,7 @@ void pqXYChartDisplayPanel::updateOptionsWidgets()
       this->Internal->StyleList->setCurrentIndex(0);
       this->Internal->MarkerStyleList->setCurrentIndex(0);
       this->Internal->AxisList->setCurrentIndex(0);
-      
+
       this->Internal->DensityArray->setCurrentIndex(2);
       }
 
@@ -391,7 +390,7 @@ void pqXYChartDisplayPanel::updateOptionsWidgets()
     this->Internal->StyleList->blockSignals(false);
     this->Internal->MarkerStyleList->blockSignals(false);
     this->Internal->AxisList->blockSignals(false);
-    
+
     this->Internal->DensityArray->blockSignals(false);
 
     // Disable the widgets if nothing is selected or current.

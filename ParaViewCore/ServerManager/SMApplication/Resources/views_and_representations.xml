@@ -4212,7 +4212,7 @@
     <!-- =================================================================== -->
     <!-- New representation for ContextView based charts. -->
     <ChartRepresentationProxy base_proxygroup="representations"
-                              base_proxyname="XYChartRepresentationBaseBase"
+                              base_proxyname="XYChartRepresentationBase"
                               class="vtkXYChartRepresentation"
                               name="XYFunctionalBagChartRepresentation"
                               processes="client|dataserver|renderserver">
@@ -4221,45 +4221,14 @@
                             default_values="FunctionalBag"
                             name="ChartType"
                             number_of_elements="1"></StringVectorProperty>
-      <SubProxy>
-        <Proxy name="PlotOptions"
-               proxygroup="options"
-               proxyname="XYFunctionalBagPlotOptions"></Proxy>
-        <ExposedProperties>
-          <Property exposed_name="SeriesDensity"
-                    name="Density" />
-          <Property exposed_name="SeriesVisibility"
-                    name="Visibility" />
-          <Property exposed_name="SeriesColor"
-                    name="Color" />
-          <Property exposed_name="SeriesLineThickness"
-                    name="LineThickness" />
-          <Property exposed_name="SeriesLineStyle"
-                    name="LineStyle" />
-          <Property exposed_name="SeriesLabel"
-                    name="Label" />
-          <Property exposed_name="SeriesMarkerStyle"
-                    name="MarkerStyle" />
-          <Property exposed_name="SeriesPlotCorner"
-                    name="PlotCorner" />
-          <Property exposed_name="SeriesBaginfo"
-                    name="BagInfo" />
-          <Property exposed_name="SeriesVisibilityInfo"
-                    name="VisibilityInfo" />
-          <Property exposed_name="SeriesColorInfo"
-                    name="ColorInfo" />
-          <Property exposed_name="SeriesLineThicknessInfo"
-                    name="LineThicknessInfo" />
-          <Property exposed_name="SeriesLineStyleInfo"
-                    name="LineStyleInfo" />
-          <Property exposed_name="SeriesLabelInfo"
-                    name="LabelInfo" />
-          <Property exposed_name="SeriesMarkerStyleInfo"
-                    name="MarkerStyleInfo" />
-          <Property exposed_name="SeriesPlotCornerInfo"
-                    name="PlotCornerInfo" />
-        </ExposedProperties>
-      </SubProxy>
+      <IntVectorProperty command="SetFlattenTable"
+                         default_values="0"
+                         name="FlattenTable"
+                         number_of_elements="1">
+        <BooleanDomain name="bool" />
+        <Documentation>Set if the multicomponent columns must be
+        splitted</Documentation>
+      </IntVectorProperty>
     </ChartRepresentationProxy>
     <!-- =================================================================== -->
     <SpreadSheetRepresentationProxy class="vtkSpreadSheetRepresentation"

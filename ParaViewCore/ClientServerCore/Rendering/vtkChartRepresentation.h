@@ -89,6 +89,11 @@ public:
   virtual void RescaleChart();
 
   // Description:
+  // Set if the table must be flattened, that is multicomponent columns split
+  // to single component. Default is true.
+  void SetFlattenTable(bool flatten);
+
+  // Description:
   // This needs to be called on all instances of vtkGeometryRepresentation when
   // the input is modified. This is essential since the geometry filter does not
   // have any real-input on the client side which messes with the Update

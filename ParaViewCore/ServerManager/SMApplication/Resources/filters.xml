@@ -9430,7 +9430,7 @@ found and the point will be rejected.</Documentation>
         observations for statistical analysis.</Documentation>
       </StringVectorProperty>
       <IntVectorProperty command="SetTransposeTable"
-                         default_values="0"
+                         default_values="1"
                          name="TransposeTable"
                          label="Process the transposed of the input table"
                          number_of_elements="1">

@@ -404,7 +404,7 @@ int vtkChartRepresentation::RequestData(vtkInformation* request,
     cout<<"Delivery output type: "<<CLASSNAME(this->DeliveryFilter->GetOutputDataObject(0))<<endl;
     }
 #endif
- 
+
   if (this->Options)
     {
     std::vector<vtkTable*> output;
@@ -502,6 +502,12 @@ void vtkChartRepresentation::SetCompositeDataSetIndex(unsigned int v)
   this->CompositeIndices.clear();
   this->CompositeIndices.insert(v);
   this->MarkModified();
+}
+
+//----------------------------------------------------------------------------
+void vtkChartRepresentation::SetFlattenTable(bool flatten)
+{
+  this->Preprocessor->SetFlattenTable(flatten);
 }
 
 //----------------------------------------------------------------------------
