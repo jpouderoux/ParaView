@@ -199,8 +199,23 @@ int vtkPVExtractBagPlots::RequestData(vtkInformation*,
     hdr->GetOutputDataObject(vtkStatisticsAlgorithm::OUTPUT_MODEL));
   vtkTable* outputHDRTable = vtkTable::SafeDownCast(outputHDR->GetBlock(0));
   outTable2->ShallowCopy(outputHDRTable);
-
-  outputHDRTable->AddColumn(inputTable->GetColumnByName("ColName"));
+  vtkAbstractArray *cname = inputTable->GetColumnByName("ColName");
+  if (cname)
+    {
+    outputHDRTable->AddColumn(cname);
+    }
+  else
+    {
+    vtkNew<vtkStringArray> colNameArray;
+    colNameArray->SetName("ColName");
+    vtkIdType len = inputTable->GetNumberOfColumns();
+    colNameArray->SetNumberOfValues(len);
+    for (vtkIdType i  = 0 ; i < len; i++)
+      {
+      colNameArray->SetValue(i, inputTable->GetColumn(i)->GetName());
+      }
+    outputHDRTable->AddColumn(colNameArray.GetPointer());
+    }
 
   // Extract the bag plot columns for functional bag plots
   vtkNew<vtkExtractFunctionalBagPlot> ebp;
