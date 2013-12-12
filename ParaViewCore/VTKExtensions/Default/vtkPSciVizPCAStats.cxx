@@ -49,6 +49,7 @@ int vtkPSciVizPCAStats::LearnAndDerive( vtkMultiBlockDataSet* modelDO, vtkTable*
     stats->SetColumnStatus( inData->GetColumnName( i ), 1 );
     }
   stats->SetNormalizationScheme( this->NormalizationScheme );
+  stats->SetMedianAbsoluteVariance( this->RobustPCA );
 
   stats->SetLearnOption( true );
   stats->SetDeriveOption( true );
@@ -80,43 +81,14 @@ int vtkPSciVizPCAStats::AssessData( vtkTable* observations, vtkDataObject* asses
   // Shallow-copy the model so we don't create an infinite loop.
   vtkDataObject* modelCopy = modelOut->NewInstance();
   modelCopy->ShallowCopy( modelOut );
-
-  vtkIdType ncols = observations->GetNumberOfColumns();
-  vtkTable* outputQuantiles = 0;
-  vtkNew<vtkPOrderStatistics> ostats;
-
-  if (this->RobustPCA)
-    {
-    // Fill table for descriptive statistics input.
-    vtkNew<vtkTable> inDescStats;
-    ostats->SetInputData(vtkStatisticsAlgorithm::INPUT_DATA, inDescStats.GetPointer());
-    for ( vtkIdType i = 0; i < ncols; ++ i )
-      {
-      inDescStats->AddColumn(observations->GetColumn(i));
-      ostats->AddColumn(observations->GetColumn(i)->GetName());
-      }
-
-    ostats->SetLearnOption(true);
-    ostats->SetDeriveOption(true);
-    ostats->SetTestOption(false);
-    ostats->SetAssessOption(false);
-    ostats->Update();
-
-    // Get the ouput table of the descriptive statistics that contains quantiles
-    // of the input data series.
-    vtkMultiBlockDataSet *outputModelDS =
-      vtkMultiBlockDataSet::SafeDownCast(
-      ostats->GetOutputDataObject(vtkStatisticsAlgorithm::OUTPUT_MODEL));
-    outputQuantiles = vtkTable::SafeDownCast(
-      outputModelDS->GetBlock(outputModelDS->GetNumberOfBlocks() - 1));
-    }
-
+  
   // Create the statistics filter and run it
   vtkPPCAStatistics* stats = vtkPPCAStatistics::New();
   stats->SetInputData( vtkStatisticsAlgorithm::INPUT_DATA, observations );
   stats->SetInputData( vtkStatisticsAlgorithm::INPUT_MODEL, modelCopy );
   //stats->GetAssessNames()->SetValue( 0, "d2" );
   modelCopy->FastDelete();
+  vtkIdType ncols = observations->GetNumberOfColumns();
   for ( vtkIdType i = 0; i < ncols; ++ i )
     {
     stats->SetColumnStatus( observations->GetColumnName( i ), 1 );
@@ -125,7 +97,7 @@ int vtkPSciVizPCAStats::AssessData( vtkTable* observations, vtkDataObject* asses
   stats->SetBasisScheme( this->BasisScheme );
   stats->SetFixedBasisSize( this->FixedBasisSize );
   stats->SetFixedBasisEnergy( this->FixedBasisEnergy );
-  stats->SetQuantiles( outputQuantiles );
+  stats->SetMedianAbsoluteVariance( this->RobustPCA );
 
   stats->SetLearnOption( false );
   stats->SetDeriveOption( true );
