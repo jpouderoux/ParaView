@@ -117,6 +117,7 @@ public:
   std::map<std::string, int> AxisCorners;
   std::map<std::string, int> MarkerStyles;
   std::map<std::string, std::string> Labels;
+  std::map<std::string, std::string> SeriesDensity;
 
   // These are used to determine when to recalculate chart bounds. If user
   // changes the X axis, we force recalculation of the chart bounds
@@ -124,8 +125,8 @@ public:
   bool PreviousUseIndexForXAxis;
   std::string PreviousXAxisSeriesName;
 
-  vtkInternals() 
-    : PreviousUseIndexForXAxis(false) 
+  vtkInternals()
+    : PreviousUseIndexForXAxis(false)
     {
     }
 
@@ -173,7 +174,7 @@ public:
       }
     this->Plots = newPlots;
     }
-  
+
   //---------------------------------------------------------------------------
   // This method will add vtkPlot instance (create new ones if neeed) for each
   // of the columns in each of the "tables" for which we have a visibility flag
@@ -375,6 +376,14 @@ void vtkXYChartRepresentation::SetLabel(const char* seriesname, const char* labe
 }
 
 //----------------------------------------------------------------------------
+void vtkXYChartRepresentation::SetDensity(const char* seriesname, const char* density)
+{
+  assert(seriesname != NULL);
+  this->Internals->SeriesDensity[seriesname] = density;
+  this->Modified();
+}
+
+//----------------------------------------------------------------------------
 void vtkXYChartRepresentation::ClearSeriesVisibilities()
 {
   this->Internals->SeriesVisibilities.clear();
@@ -420,6 +429,13 @@ void vtkXYChartRepresentation::ClearMarkerStyles()
 void vtkXYChartRepresentation::ClearLabels()
 {
   this->Internals->Labels.clear();
+  this->Modified();
+}
+
+//----------------------------------------------------------------------------
+void vtkXYChartRepresentation::ClearDensity()
+{
+  this->Internals->SeriesDensity.clear();
   this->Modified();
 }
 

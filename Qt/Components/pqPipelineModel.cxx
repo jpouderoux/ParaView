@@ -65,7 +65,9 @@ public:
     SERVER,
     LINK,
     GEOMETRY,
+  BAGCHART,
     BARCHART,
+  FUNCTIONALBAGCHART,
     LINECHART,
     TABLE,
     INDETERMINATE,
@@ -392,8 +394,12 @@ void pqPipelineModel::constructor()
     ":/pqWidgets/Icons/pqLinkBack16.png");
   this->PixmapList[pqPipelineModelDataItem::GEOMETRY].load(
     ":/pqWidgets/Icons/pq3DView16.png");
+  this->PixmapList[pqPipelineModelDataItem::BAGCHART].load(
+    ":/pqWidgets/Icons/pqBagChart16.png");
   this->PixmapList[pqPipelineModelDataItem::BARCHART].load(
     ":/pqWidgets/Icons/pqHistogram16.png");
+  this->PixmapList[pqPipelineModelDataItem::FUNCTIONALBAGCHART].load(
+    ":/pqWidgets/Icons/pqFunctionalBagChart16.png");
   this->PixmapList[pqPipelineModelDataItem::LINECHART].load(
     ":/pqWidgets/Icons/pqLineChart16.png");
   this->PixmapList[pqPipelineModelDataItem::TABLE].load(
