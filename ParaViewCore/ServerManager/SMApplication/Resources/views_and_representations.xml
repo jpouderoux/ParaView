@@ -3792,7 +3792,6 @@
         </ChartSeriesSelectionDomain>
       </StringVectorProperty>
 
-
       <SubProxy>
         <!--
           SelectionRepresentation proxy is used to convey the selection to view.
@@ -4266,8 +4265,6 @@
       <PropertyGroup label="Series Parameters"
                      panel_widget="SeriesEditor"
                      panel_visibility="default" >
-        <Property name="SeriesVisibility"
-                  function="SeriesVisibility" />
         <Property name="SeriesColor"
                   function="SeriesColor" />
         <Property name="SeriesLineThickness"
@@ -4332,22 +4329,40 @@
         <EnumerationDomain name="enum">
           <Entry text="Line" value="0" />
           <Entry text="Bar" value="2" />
-      <Entry text="Bag" value="4" />
-      <Entry text="FunctionalBag" value="5" />
+          <Entry text="Bag" value="4" />
+          <Entry text="FunctionalBag" value="5" />
         </EnumerationDomain>
       </IntVectorProperty>
+
+      <StringVectorProperty command="SetSeriesDensity"
+                            clean_command="ClearSeriesDensity"
+                            element_types="2 2"
+                            name="SeriesDensity"
+                            number_of_elements_per_command="2"
+                            repeat_command="1">
+        <Documentation>Set the bag plot density serie.</Documentation>
+        <ChartSeriesSelectionDomain name="array_list"
+                                    default_mode="value"
+                                    default_value="0">
+          <RequiredProperties>
+            <Property function="Input" name="Input" />
+            <Property function="FieldDataSelection" name="AttributeType" />
+            <Property function="CompositeIndexSelection" name="CompositeDataSetIndex" />
+          </RequiredProperties>
+        </ChartSeriesSelectionDomain>
+      </StringVectorProperty>
 
       <PropertyGroup label="Series Parameters"
                      panel_widget="SeriesEditor"
                      panel_visibility="default" >
-        <Property name="SeriesDensity"
-                  function="SeriesDensity" />
         <Property name="SeriesVisibility"
                   function="SeriesVisibility" />
         <Property name="SeriesColor"
                   function="SeriesColor" />
         <Property name="SeriesLabel"
                   function="SeriesLabel" />
+        <Property name="SeriesDensity"
+                  function="SeriesDensity" />
         <Property name="SeriesPlotCorner"
                   function="SeriesPlotCorner"/>
       </PropertyGroup>
@@ -4371,6 +4386,16 @@
       <Entry text="Bag" value="4" />
       <Entry text="FunctionalBag" value="5" />
         </EnumerationDomain>
+      </IntVectorProperty>
+
+      <IntVectorProperty command="SetFlattenTable"
+                         default_values="0"
+                         name="FlattenTable"
+                         number_of_elements="1"
+                         panel_visibility="never">
+        <BooleanDomain name="bool" />
+        <Documentation>Flatten the table, i.e. split any multicomponent
+        columns into separate components.</Documentation>
       </IntVectorProperty>
 
       <PropertyGroup label="Series Parameters"

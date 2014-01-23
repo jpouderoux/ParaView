@@ -376,7 +376,7 @@ void vtkXYChartRepresentation::SetLabel(const char* seriesname, const char* labe
 }
 
 //----------------------------------------------------------------------------
-void vtkXYChartRepresentation::SetDensity(const char* seriesname, const char* density)
+void vtkXYChartRepresentation::SetSeriesDensity(const char* seriesname, const char* density)
 {
   assert(seriesname != NULL);
   this->Internals->SeriesDensity[seriesname] = density;
@@ -433,7 +433,7 @@ void vtkXYChartRepresentation::ClearLabels()
 }
 
 //----------------------------------------------------------------------------
-void vtkXYChartRepresentation::ClearDensity()
+void vtkXYChartRepresentation::ClearSeriesDensity()
 {
   this->Internals->SeriesDensity.clear();
   this->Modified();

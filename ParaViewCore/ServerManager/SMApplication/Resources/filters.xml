@@ -9856,8 +9856,8 @@ found and the point will be rejected.</Documentation>
       <!-- View can be used to specify the preferred view for the proxy -->
       <Hints>
         <Visibility replace_input="0" />
-        <View type="XYBagChartView" />
-        <View type="XYFunctionalBagChartView" />
+        <View type="XYFunctionalBagChartView" port="0"/>
+        <View type="XYBagChartView" port="1" />
         <Plotable />
       </Hints>
       <!-- End ExtractBoxPlots -->

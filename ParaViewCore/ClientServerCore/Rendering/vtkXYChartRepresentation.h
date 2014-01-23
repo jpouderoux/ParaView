@@ -79,7 +79,7 @@ public:
   void SetAxisCorner(const char* name, int corner);
   void SetMarkerStyle(const char* name, int style);
   void SetLabel(const char* name, const char* label);
-  void SetDensity(const char* name, const char* density);
+  void SetSeriesDensity(const char* name, const char* density);
 
   void ClearSeriesVisibilities();
   void ClearLineThicknesses();
@@ -88,7 +88,7 @@ public:
   void ClearAxisCorners();
   void ClearMarkerStyles();
   void ClearLabels();
-  void ClearDensity();
+  void ClearSeriesDensity();
 
 //BTX
 protected:
