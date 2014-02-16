@@ -1027,6 +1027,24 @@
                       representation_name="XYBarChartRepresentation">
       <Documentation>This is the proxy for bar chart view.</Documentation>
     </ContextViewProxy>
+  <!-- ================================================================== -->
+    <ContextViewProxy base_proxygroup="views"
+                      base_proxyname="XYChartViewBase"
+                      class="vtkPVBagChartView"
+                      name="XYBagChartView"
+                      processes="client|renderserver|dataserver"
+                      representation_name="XYBagChartRepresentation">
+      <Documentation>This is the proxy for bag chart view.</Documentation>
+    </ContextViewProxy>
+  <!-- ================================================================== -->
+    <ContextViewProxy base_proxygroup="views"
+                      base_proxyname="XYChartViewBase"
+                      class="vtkPVFunctionalBagChartView"
+                      name="XYFunctionalBagChartView"
+                      processes="client|renderserver|dataserver"
+                      representation_name="XYFunctionalBagChartRepresentation">
+      <Documentation>This is the proxy for functional bag chart view.</Documentation>
+    </ContextViewProxy>
     <!-- ================================================================== -->
     <ContextViewProxy base_proxygroup="views"
                       base_proxyname="ViewBase"
@@ -1337,11 +1355,11 @@
             <Property name="NonlinearSubdivisionLevel"
                       panel_visibility="advanced" />
             <Property name="BlockVisibility"
-	                    panel_visibility="never" />
+                      panel_visibility="never" />
             <Property name="BlockColor"
-	                    panel_visibility="never" />
+                      panel_visibility="never" />
             <Property name="BlockOpacity"
-	                    panel_visibility="never" />
+                      panel_visibility="never" />
           </PropertyGroup>
         </ExposedProperties>
       </SubProxy>
@@ -1486,17 +1504,17 @@
           <Property exposed_name="SelectionRepresentation" name="Representation" panel_visibility="never" />
           <Property exposed_name="SelectionPointSize" name="PointSize" panel_visibility="never" />
           <Property exposed_name="SelectionLineWidth" name="LineWidth" panel_visibility="never" />
-	  <Property exposed_name="SelectionCellLabelVisibility" name="CellLabelVisibility" panel_visibility="never"/>
+          <Property exposed_name="SelectionCellLabelVisibility" name="CellLabelVisibility" panel_visibility="never"/>
           <PropertyGroup label="Cell Label Font" panel_visibility="never" panel_widget="FontEditor">
-	    <Property exposed_name="SelectionCellLabelBold" name="CellLabelBold" function="Bold"/>
-	    <Property exposed_name="SelectionCellLabelColor" name="CellLabelColor" function="Color"/>
-	    <Property exposed_name="SelectionCellLabelFontFamily" name="CellLabelFontFamily" function="Family"/>
-	    <Property exposed_name="SelectionCellLabelFontSize" name="CellLabelFontSize" function="Size"/>
-	    <Property exposed_name="SelectionCellLabelFormat" name="CellLabelFormat" />
-	    <Property exposed_name="SelectionCellLabelItalic" name="CellLabelItalic" function="Italics"/>
-	    <Property exposed_name="SelectionCellLabelJustification" name="CellLabelJustification" />
-	    <Property exposed_name="SelectionCellLabelOpacity" name="CellLabelOpacity" function="Opacity"/>
-	    <Property exposed_name="SelectionCellLabelShadow" name="CellLabelShadow" function="Shadow"/>
+            <Property exposed_name="SelectionCellLabelBold" name="CellLabelBold" function="Bold"/>
+            <Property exposed_name="SelectionCellLabelColor" name="CellLabelColor" function="Color"/>
+            <Property exposed_name="SelectionCellLabelFontFamily" name="CellLabelFontFamily" function="Family"/>
+            <Property exposed_name="SelectionCellLabelFontSize" name="CellLabelFontSize" function="Size"/>
+            <Property exposed_name="SelectionCellLabelFormat" name="CellLabelFormat" />
+            <Property exposed_name="SelectionCellLabelItalic" name="CellLabelItalic" function="Italics"/>
+            <Property exposed_name="SelectionCellLabelJustification" name="CellLabelJustification" />
+            <Property exposed_name="SelectionCellLabelOpacity" name="CellLabelOpacity" function="Opacity"/>
+            <Property exposed_name="SelectionCellLabelShadow" name="CellLabelShadow" function="Shadow"/>
           </PropertyGroup>
           <Property exposed_name="SelectionPointLabelVisibility" name="PointLabelVisibility" panel_visibility="never"/>
           <PropertyGroup label="Point Label Font" panel_visibility="never" panel_widget="FontEditor">
@@ -3763,7 +3781,7 @@
       <IntVectorProperty clean_command="ResetCompositeDataSetIndices"
                          command="AddCompositeDataSetIndex"
                          default_values="1"
-			                   number_of_elements="1"
+                         number_of_elements="1"
                          name="CompositeDataSetIndex"
                          number_of_elements_per_command="1"
                          panel_visibility="default"
@@ -3887,7 +3905,6 @@
           </RequiredProperties>
         </ChartSeriesSelectionDomain>
       </StringVectorProperty>
-
 
       <SubProxy>
         <!--
@@ -4362,8 +4379,6 @@
       <PropertyGroup label="Series Parameters"
                      panel_widget="SeriesEditor"
                      panel_visibility="default" >
-        <Property name="SeriesVisibility"
-                  function="SeriesVisibility" />
         <Property name="SeriesColor"
                   function="SeriesColor" />
         <Property name="SeriesLineThickness"
@@ -4394,7 +4409,107 @@
         <EnumerationDomain name="enum">
           <Entry text="Line" value="0" />
           <Entry text="Bar" value="2" />
+          <Entry text="Bag" value="4" />
+          <Entry text="FunctionalBag" value="5" />
         </EnumerationDomain>
+      </IntVectorProperty>
+
+      <PropertyGroup label="Series Parameters"
+                     panel_widget="SeriesEditor"
+                     panel_visibility="default" >
+        <Property name="SeriesVisibility"
+                  function="SeriesVisibility" />
+        <Property name="SeriesColor"
+                  function="SeriesColor" />
+        <Property name="SeriesLabel"
+                  function="SeriesLabel" />
+        <Property name="SeriesPlotCorner"
+                  function="SeriesPlotCorner"/>
+      </PropertyGroup>
+    </ChartRepresentationProxy>
+
+  <!-- =================================================================== -->
+    <ChartRepresentationProxy base_proxygroup="representations"
+                              base_proxyname="XYChartRepresentationBase"
+                              class="vtkXYChartRepresentation"
+                              name="XYBagChartRepresentation"
+                              processes="client|dataserver|renderserver">
+      <Documentation>Representation used by XYBagChartView.</Documentation>
+      <IntVectorProperty command="SetChartType"
+                         default_values="4"
+                         name="ChartType"
+                         number_of_elements="1"
+                         panel_visibility="never">
+        <EnumerationDomain name="enum">
+          <Entry text="Line" value="0" />
+          <Entry text="Bar" value="2" />
+          <Entry text="Bag" value="4" />
+          <Entry text="FunctionalBag" value="5" />
+        </EnumerationDomain>
+      </IntVectorProperty>
+
+      <StringVectorProperty command="SetSeriesDensity"
+                            clean_command="ClearSeriesDensity"
+                            element_types="2 2"
+                            name="SeriesDensity"
+                            number_of_elements_per_command="2"
+                            repeat_command="1">
+        <Documentation>Set the bag plot density serie.</Documentation>
+        <ChartSeriesSelectionDomain name="array_list"
+                                    default_mode="value"
+                                    default_value="0">
+          <RequiredProperties>
+            <Property function="Input" name="Input" />
+            <Property function="FieldDataSelection" name="AttributeType" />
+            <Property function="CompositeIndexSelection" name="CompositeDataSetIndex" />
+          </RequiredProperties>
+        </ChartSeriesSelectionDomain>
+      </StringVectorProperty>
+
+      <PropertyGroup label="Series Parameters"
+                     panel_widget="SeriesEditor"
+                     panel_visibility="default" >
+        <Property name="SeriesVisibility"
+                  function="SeriesVisibility" />
+        <Property name="SeriesColor"
+                  function="SeriesColor" />
+        <Property name="SeriesLabel"
+                  function="SeriesLabel" />
+        <Property name="SeriesDensity"
+                  function="SeriesDensity" />
+        <Property name="SeriesPlotCorner"
+                  function="SeriesPlotCorner"/>
+      </PropertyGroup>
+    </ChartRepresentationProxy>
+
+  <!-- =================================================================== -->
+    <ChartRepresentationProxy base_proxygroup="representations"
+                              base_proxyname="XYChartRepresentationBase"
+                              class="vtkXYChartRepresentation"
+                              name="XYFunctionalBagChartRepresentation"
+                              processes="client|dataserver|renderserver">
+      <Documentation>Representation used by XYFunctionalBagChartView.</Documentation>
+      <IntVectorProperty command="SetChartType"
+                         default_values="5"
+                         name="ChartType"
+                         number_of_elements="1"
+                         panel_visibility="never">
+        <EnumerationDomain name="enum">
+          <Entry text="Line" value="0" />
+          <Entry text="Bar" value="2" />
+      <Entry text="Bag" value="4" />
+      <Entry text="FunctionalBag" value="5" />
+        </EnumerationDomain>
+      </IntVectorProperty>
+
+      <IntVectorProperty command="SetFlattenTable"
+                         default_values="0"
+                         name="FlattenTable"
+                         number_of_elements="1"
+                         panel_visibility="never">
+        <BooleanDomain name="bool" />
+        <Documentation>Flatten the table, i.e. split any multicomponent
+        columns into separate components.</Documentation>
       </IntVectorProperty>
 
       <PropertyGroup label="Series Parameters"
@@ -4617,8 +4732,8 @@
 
     <!-- ================================================================== -->
     <RepresentationProxy name="PythonRepresentation"
-			 class="vtkPythonRepresentation"
-			 processes="client|dataserver|renderserver">
+                        class="vtkPythonRepresentation"
+                        processes="client|dataserver|renderserver">
       <InputProperty command="SetInputConnection" name="Input"/>
       <IntVectorProperty command="SetVisibility"
                          default_values="1"
@@ -4947,16 +5062,16 @@
         <Property exposed_name="SelectionPointSize" name="PointSize" panel_visibility="never" />
         <Property exposed_name="SelectionLineWidth" name="LineWidth" panel_visibility="never" />
         <PropertyGroup label="Cell Label Font" panel_visibility="never" panel_widget="FontEditor">
-	  <Property exposed_name="SelectionCellLabelBold" name="CellLabelBold" />
-	  <Property exposed_name="SelectionCellLabelColor" name="CellLabelColor" />
-	  <Property exposed_name="SelectionCellLabelFontFamily" name="CellLabelFontFamily" function="Family"/>
-	  <Property exposed_name="SelectionCellLabelFontSize" name="CellLabelFontSize" />
-	  <Property exposed_name="SelectionCellLabelFormat" name="CellLabelFormat" />
-	  <Property exposed_name="SelectionCellLabelItalic" name="CellLabelItalic" />
-	  <Property exposed_name="SelectionCellLabelJustification" name="CellLabelJustification" />
-	  <Property exposed_name="SelectionCellLabelOpacity" name="CellLabelOpacity" />
-	  <Property exposed_name="SelectionCellLabelShadow" name="CellLabelShadow" />
-	  <Property exposed_name="SelectionCellLabelVisibility" name="CellLabelVisibility" />
+          <Property exposed_name="SelectionCellLabelBold" name="CellLabelBold" />
+          <Property exposed_name="SelectionCellLabelColor" name="CellLabelColor" />
+          <Property exposed_name="SelectionCellLabelFontFamily" name="CellLabelFontFamily" function="Family"/>
+          <Property exposed_name="SelectionCellLabelFontSize" name="CellLabelFontSize" />
+          <Property exposed_name="SelectionCellLabelFormat" name="CellLabelFormat" />
+          <Property exposed_name="SelectionCellLabelItalic" name="CellLabelItalic" />
+          <Property exposed_name="SelectionCellLabelJustification" name="CellLabelJustification" />
+          <Property exposed_name="SelectionCellLabelOpacity" name="CellLabelOpacity" />
+          <Property exposed_name="SelectionCellLabelShadow" name="CellLabelShadow" />
+          <Property exposed_name="SelectionCellLabelVisibility" name="CellLabelVisibility" />
         </PropertyGroup>
         <PropertyGroup label="Point Label Font" panel_visibility="never" panel_widget="FontEditor">
           <Property exposed_name="SelectionPointLabelBold" name="PointLabelBold"/>
