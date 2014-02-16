@@ -61,6 +61,7 @@ namespace
         "^Time",
         "^vtkOriginal.*",
         "^vtkValidPointMask",
+        "QMed*",
         NULL
       };
       for (int cc=0; defaults[cc] != NULL; cc++)
@@ -116,7 +117,7 @@ public:
   // used to "uniquify" the array names.
   void PopulateAvailableArrays(const std::string& blockName,
     std::vector<vtkStdString>& strings,
-    vtkPVDataInformation* dataInfo, int fieldAssociation)
+    vtkPVDataInformation* dataInfo, int fieldAssociation, bool flattenTable)
     {
     // this method is typically called for leaf nodes (or multi-piece).
     // assert((dataInfo->GetCompositeDataInformation()->GetDataIsComposite() == 0) ||
@@ -140,7 +141,7 @@ public:
         continue;
         }
 
-      if (arrayInfo->GetNumberOfComponents() > 1)
+      if (arrayInfo->GetNumberOfComponents() > 1 && flattenTable)
         {
         for (int kk=0; kk <= arrayInfo->GetNumberOfComponents(); kk++)
           {
@@ -173,6 +174,7 @@ vtkSMChartSeriesSelectionDomain::vtkSMChartSeriesSelectionDomain() :
   this->DefaultMode = vtkSMChartSeriesSelectionDomain::UNDEFINED;
   this->DefaultValue = 0;
   this->SetDefaultValue("");
+  this->FlattenTable = true;
 
   this->AddObserver(vtkCommand::DomainModifiedEvent,
     this, &vtkSMChartSeriesSelectionDomain::OnDomainModified);
@@ -238,6 +240,12 @@ int vtkSMChartSeriesSelectionDomain::ReadXMLAttributes(
       }
     }
 
+  const char* flatten_table = element->GetAttribute("flatten_table");
+  if (flatten_table)
+    {
+    this->FlattenTable = (strcmp(default_mode, "true") == 0) ||
+      (strcmp(default_mode, "1") == 0);
+    }
   return 1;
 }
 
@@ -274,7 +282,7 @@ void vtkSMChartSeriesSelectionDomain::Update(vtkSMProperty*)
     std::vector<vtkStdString> column_names;
     int fieldAssociation = vtkSMUncheckedPropertyHelper(fieldDataSelection).GetAsInt(0);
     this->Internals->PopulateAvailableArrays(std::string(),
-      column_names, dataInfo, fieldAssociation);
+      column_names, dataInfo, fieldAssociation, this->FlattenTable);
     this->SetStrings(column_names);
     return;
     }
@@ -307,7 +315,7 @@ void vtkSMChartSeriesSelectionDomain::Update(vtkSMProperty*)
         }
       }
     this->Internals->PopulateAvailableArrays(blockNameStream.str(),
-      column_names, dataInfo, fieldAssociation);
+      column_names, dataInfo, fieldAssociation, this->FlattenTable);
     }
   this->SetStrings(column_names);
 }
@@ -403,7 +411,7 @@ void vtkSMChartSeriesSelectionDomain::UpdateDefaultValues(
         {
         values->AddString(cur_values[kk].c_str());
         }
-      } 
+      }
     }
 
   vp->SetElements(values.GetPointer());

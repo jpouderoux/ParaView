@@ -55,6 +55,7 @@ vtkChartRepresentation::vtkChartRepresentation()
 
   this->CacheKeeper = vtkPVCacheKeeper::New();
   this->EnableServerSideRendering = false;
+  this->FlattenTable = 1;
 }
 
 //----------------------------------------------------------------------------
@@ -175,7 +176,7 @@ int vtkChartRepresentation::RequestData(vtkInformation* request,
     vtkSmartPointer<vtkDataObject> data;
 
     // don't process data is the cachekeeper has already cached the result.
-    if (!this->CacheKeeper->IsCached())
+    //if (!this->CacheKeeper->IsCached())
       {
       data = vtkDataObject::GetData(inputVector[0], 0);
 
@@ -208,7 +209,7 @@ int vtkChartRepresentation::RequestData(vtkInformation* request,
       vtkNew<vtkBlockDeliveryPreprocessor> preprocessor;
       // tell the preprocessor to flatten multicomponent arrays i.e. extract each
       // component into a separate array.
-      preprocessor->SetFlattenTable(1);
+      preprocessor->SetFlattenTable(this->FlattenTable);
       preprocessor->SetFieldAssociation(this->FieldAssociation);
       preprocessor->SetInputData(data);
       preprocessor->Update();
