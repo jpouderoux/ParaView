@@ -16,6 +16,7 @@
 
 #include "vtkAnnotationLink.h"
 #include "vtkAxis.h"
+#include "vtkChartBox.h"
 #include "vtkChartWarning.h"
 #include "vtkChartLegend.h"
 #include "vtkChartParallelCoordinates.h"
@@ -137,6 +138,10 @@ void vtkPVXYChartView::SetChartType(const char *type)
     || strcmp(type, "Bag") == 0 || strcmp(type, "FunctionalBag") == 0)
     {
     this->Chart = vtkChartXY::New();
+    }
+  else if (strcmp(type, "Box") == 0)
+    {
+    this->Chart = vtkChartBox::New();
     }
   else if (strcmp(type, "ParallelCoordinates") == 0)
     {

@@ -56,8 +56,9 @@ vtkStandardNewMacro(vtkPVExtractBagPlots);
 //----------------------------------------------------------------------------
 vtkPVExtractBagPlots::vtkPVExtractBagPlots()
 {
-  this->Sigma = 1.;
   this->TransposeTable = false;
+  this->RobustPCA = false;
+  this->Sigma = 1.;
   this->Internal = new PVExtractBagPlotsInternal();
   this->SetNumberOfOutputPorts(2);
 }
@@ -155,7 +156,7 @@ int vtkPVExtractBagPlots::RequestData(vtkInformation*,
   pca->SetBasisScheme(vtkPCAStatistics::FIXED_BASIS_SIZE);
   pca->SetFixedBasisSize(2);
   pca->SetTrainingFraction(1.0);
-  //pca->RobustPCAOn();
+  pca->SetRobustPCA(this->RobustPCA);
   pca->Update();
 
   vtkTable* outputPCATable = vtkTable::SafeDownCast(

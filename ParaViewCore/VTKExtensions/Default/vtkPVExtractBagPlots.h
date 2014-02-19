@@ -36,10 +36,19 @@ public:
   void EnableAttributeArray(const char*);
   void ClearAttributeArrays();
 
+  // Description:
+  // Set/get if the process must be done on the transposed of the input table
   vtkGetMacro(TransposeTable, bool);
   vtkSetMacro(TransposeTable, bool);
   vtkBooleanMacro(TransposeTable, bool);
 
+  // Description:
+  // Set/get if the PCA must be done in robust mode
+  vtkGetMacro(RobustPCA, bool);
+  vtkSetMacro(RobustPCA, bool);
+
+  // Description:
+  // Set/get the sigma parameter for the HDR filter
   vtkGetMacro(Sigma, double);
   vtkSetMacro(Sigma, double);
 
@@ -54,6 +63,7 @@ protected:
   PVExtractBagPlotsInternal* Internal;
 
   bool TransposeTable;
+  bool RobustPCA;
   double Sigma;
 
 private:

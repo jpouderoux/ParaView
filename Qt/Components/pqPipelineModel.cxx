@@ -33,6 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "pqPipelineModel.h"
 
 #include "pqApplicationCore.h"
+#include "pqBoxChartView.h"
 #include "pqDisplayPolicy.h"
 #include "pqLiveInsituVisualizationManager.h"
 #include "pqOutputPort.h"
@@ -43,8 +44,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "pqServerManagerObserver.h"
 #include "pqSpreadSheetView.h"
 #include "pqUndoStack.h"
+#include "pqXYBagChartView.h"
 #include "pqXYBarChartView.h"
 #include "pqXYChartView.h"
+#include "pqXYFunctionalBagChartView.h"
 
 #include <QApplication>
 #include <QString>
@@ -65,9 +68,10 @@ public:
     SERVER,
     LINK,
     GEOMETRY,
-  BAGCHART,
+    BAGCHART,
     BARCHART,
-  FUNCTIONALBAGCHART,
+    BOXCHART,
+    FUNCTIONALBAGCHART,
     LINECHART,
     TABLE,
     INDETERMINATE,
@@ -340,9 +344,21 @@ private:
       {
       QString type = policy->getPreferredViewType(
         port, false);
+      if (type == pqXYBagChartView::XYBagChartViewType())
+        {
+        return BAGCHART;
+        }
       if (type == pqXYBarChartView::XYBarChartViewType())
         {
         return BARCHART;
+        }
+      if (type == pqBoxChartView::chartViewType())
+        {
+        return BOXCHART;
+        }
+      if (type == pqXYFunctionalBagChartView::XYFunctionalBagChartViewType())
+        {
+        return FUNCTIONALBAGCHART;
         }
       if (type == pqXYChartView::XYChartViewType())
         {
@@ -398,6 +414,8 @@ void pqPipelineModel::constructor()
     ":/pqWidgets/Icons/pqBagChart16.png");
   this->PixmapList[pqPipelineModelDataItem::BARCHART].load(
     ":/pqWidgets/Icons/pqHistogram16.png");
+  this->PixmapList[pqPipelineModelDataItem::BOXCHART].load(
+    ":/pqWidgets/Icons/pqBoxChart16.png");
   this->PixmapList[pqPipelineModelDataItem::FUNCTIONALBAGCHART].load(
     ":/pqWidgets/Icons/pqFunctionalBagChart16.png");
   this->PixmapList[pqPipelineModelDataItem::LINECHART].load(

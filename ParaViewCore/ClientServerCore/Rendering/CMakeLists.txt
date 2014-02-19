@@ -51,7 +51,10 @@ set (Module_SRCS
   vtkMPIMoveData.cxx
   vtkOutlineRepresentation.cxx
   vtkPVBagChartView.cxx
+  vtkPVBagChartRepresentation.cxx
   vtkPVBarChartView.cxx
+  vtkPVBoxChartRepresentation.cxx
+  vtkPVBoxChartView.cxx
   vtkPVCacheKeeper.cxx
   vtkPVCacheKeeperPipeline.cxx
   vtkPVCacheSizeInformation.cxx

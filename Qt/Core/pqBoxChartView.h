@@ -1,7 +1,7 @@
 /*=========================================================================
 
    Program: ParaView
-   Module:    pqXYBagChartView.h
+   Module:    pqBoxChartView.h
 
    Copyright (c) 2005-2008 Sandia Corporation, Kitware Inc.
    All rights reserved.
@@ -29,41 +29,52 @@ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ========================================================================*/
-#ifndef __pqXYBagChartView_h
-#define __pqXYBagChartView_h
+#ifndef __pqBoxChartView_h
+#define __pqBoxChartView_h
 
 #include "pqContextView.h"
 
 class vtkSMSourceProxy;
 class pqDataRepresentation;
 
-/// Bag chart view
-class PQCORE_EXPORT pqXYBagChartView : public pqContextView
+/// Bar chart view
+class PQCORE_EXPORT pqBoxChartView : public pqContextView
 {
   Q_OBJECT
   typedef pqContextView Superclass;
 
 public:
-  static QString XYBagChartViewType() { return "XYBagChartView"; }
-  static QString XYBagChartViewTypeName() { return "Bag Chart View"; }
-  /// Currently theis chart view is not supporting selection.
-  virtual bool supportsSelection() const { return false; }
+  static QString chartViewType() { return "BoxChartView"; }
+  static QString chartViewTypeName() { return "Box Chart View"; }
 
-public:
-  pqXYBagChartView(const QString& group,
+  pqBoxChartView(const QString& group,
                  const QString& name,
                  vtkSMContextViewProxy* viewModule,
                  pqServer* server,
                  QObject* parent=NULL);
 
-  virtual ~pqXYBagChartView();
+  virtual ~pqBoxChartView();
 
   /// Set property values.
   virtual void setDefaultPropertyValues();
 
+signals:
+  /// Fired when the currently shown representation changes. \c repr may be
+  /// NULL.
+  void showing(pqDataRepresentation* repr);
+
+public slots:
+  /// Called when a new repr is added.
+  void onAddRepresentation(pqRepresentation*);
+  void onRemoveRepresentation(pqRepresentation*);
+
+protected slots:
+  /// Called to ensure that at most 1 repr is visible at a time.
+  void updateRepresentationVisibility(pqRepresentation* repr, bool visible);
+
 private:
-  pqXYBagChartView(const pqXYBagChartView&); // Not implemented.
-  void operator=(const pqXYBagChartView&); // Not implemented.
+  pqBoxChartView(const pqBoxChartView&); // Not implemented.
+  void operator=(const pqBoxChartView&); // Not implemented.
 };
 
 #endif

@@ -9851,7 +9851,33 @@ found and the point will be rejected.</Documentation>
       </Hints>
       <!-- End ExtractHistogram -->
     </SourceProxy>
-  <!-- ==================================================================== -->
+    <!-- ==================================================================== -->
+    <SourceProxy class="vtkComputeQuartiles"
+                 label="Compute Quartiles"
+                 name="ComputeQuartiles">
+      <Documentation long_help="Compute the quartiles table from a dataset or table."
+                     short_help="Compute the quartiles table from a dataset or table.">
+                     </Documentation>
+      <InputProperty command="SetInputConnection"
+                    name="Input">
+        <ProxyGroupDomain name="groups">
+          <Group name="sources" />
+          <Group name="filters" />
+        </ProxyGroupDomain>
+        <DataTypeDomain name="input_type">
+          <DataType value="vtkDataObject" />
+        </DataTypeDomain>
+        <Documentation>This property specifies the input to the
+        filter.</Documentation>
+      </InputProperty>
+      <!-- View can be used to specify the preferred view for the proxy -->
+      <Hints>
+        <View type="BoxChartView" />
+        <Plotable />
+      </Hints>
+      <!-- End ComputeQuartiles -->
+    </SourceProxy>
+    <!-- ==================================================================== -->
     <SourceProxy class="vtkPVTransposeTable"
                  label="Transpose Table"
                  name="TransposeTable">
@@ -9964,7 +9990,15 @@ found and the point will be rejected.</Documentation>
         <Documentation>This flag indicates if the input table must
         be transposed first.</Documentation>
       </IntVectorProperty>
-       <DoubleVectorProperty command="SetSigma"
+      <IntVectorProperty command="SetRobustPCA"
+                         default_values="0"
+                         name="RobustPCA"
+                         number_of_elements="1">
+        <BooleanDomain name="bool" />
+        <Documentation>This flag indicates if the PCA should be run
+        in robust mode or not.</Documentation>
+      </IntVectorProperty>
+      <DoubleVectorProperty command="SetSigma"
                          default_values="1"
                          name="Sigma"
                          label="HDR smoothing parameter"
@@ -9973,14 +10007,18 @@ found and the point will be rejected.</Documentation>
         <Documentation>Specify the smoothing parameter of the
         HDR.</Documentation>
       </DoubleVectorProperty>
+      <OutputPort index="0"
+                  name="Functional Bag Plot Data" />
+      <OutputPort index="1"
+                  name="Bag Plot Data" />
       <!-- View can be used to specify the preferred view for the proxy -->
       <Hints>
         <Visibility replace_input="0" />
-        <View type="XYFunctionalBagChartView" port="0"/>
+        <View type="XYFunctionalBagChartView" port="0" />
         <View type="XYBagChartView" port="1" />
         <Plotable />
       </Hints>
-      <!-- End ExtractBoxPlots -->
+      <!-- End ExtractBagPlots -->
     </SourceProxy>
     <!-- ==================================================================== -->
     <SourceProxy class="vtkPassThrough"

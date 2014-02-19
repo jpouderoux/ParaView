@@ -146,6 +146,7 @@ const char** vtkSMChartSeriesListDomain::GetKnownSeriesNames()
     };
   return strings_to_check;
 }
+
 //----------------------------------------------------------------------------
 int vtkSMChartSeriesListDomain::SetDefaultValues(vtkSMProperty* prop)
 {

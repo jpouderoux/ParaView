@@ -42,6 +42,8 @@
     <Proxy group="filters" name="ProgrammableFilter"
             icon=":/pqWidgets/Icons/pqProgrammableFilter24.png" omit_from_toolbar="1"/>
     <Proxy group="filters" name="TransposeTable" omit_from_toolbar="1"/>
+    <Proxy group="filters" name="ComputeQuartiles"
+            icon=":/pqWidgets/Icons/pqBoxChart16.png" omit_from_toolbar="1"/>
     <Proxy group="filters" name="ExtractBagPlots"
             icon=":/pqWidgets/Icons/pqFunctionalBagChart16.png" omit_from_toolbar="1"/>
   </Category>

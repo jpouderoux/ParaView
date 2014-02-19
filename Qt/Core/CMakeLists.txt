@@ -41,6 +41,8 @@ set(Module_SRCS
   pqApplicationCore.h
   pqAutoStartInterface.cxx
   pqAutoStartInterface.h
+  pqBoxChartView.cxx
+  pqBoxChartView.h
   pqCollaborationEventPlayer.cxx
   pqCollaborationEventPlayer.h
   pqCollaborationManager.cxx
@@ -244,6 +246,7 @@ set (Module_MOC_HDRS
   pqAnimationCue.h
   pqAnimationScene.h
   pqApplicationCore.h
+  pqBoxChartView.h
   pqCollaborationEventPlayer.h
   pqCollaborationManager.h
   pqComparativeContextView.h

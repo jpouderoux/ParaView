@@ -32,6 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "pqStandardViewModules.h"
 
+#include "pqBoxChartView.h"
 #include "pqComparativeRenderView.h"
 #include "pqComparativeXYBarChartView.h"
 #include "pqComparativeXYChartView.h"
@@ -76,6 +77,7 @@ QStringList pqStandardViewModules::viewTypes() const
     pqXYChartView::XYChartViewType() <<
     pqXYBagChartView::XYBagChartViewType() <<
     pqXYBarChartView::XYBarChartViewType() <<
+    pqBoxChartView::chartViewType() <<
     pqComparativeRenderView::comparativeRenderViewType() <<
     pqComparativeXYChartView::chartViewType() <<
     pqComparativeXYBarChartView::chartViewType() <<
@@ -126,6 +128,10 @@ QString pqStandardViewModules::viewTypeName(const QString& type) const
   else if (type == pqXYBarChartView::XYBarChartViewType())
     {
     return pqXYBarChartView::XYBarChartViewTypeName();
+    }
+  else if (type == pqBoxChartView::chartViewType())
+    {
+    return pqBoxChartView::chartViewTypeName();
     }
   else if (type == pqXYFunctionalBagChartView::XYFunctionalBagChartViewType())
     {
@@ -194,6 +200,10 @@ vtkSMProxy* pqStandardViewModules::createViewProxy(const QString& viewtype,
   else if (viewtype == pqXYBarChartView::XYBarChartViewType())
     {
     root_xmlname = "XYBarChartView";
+    }
+  else if (viewtype == pqBoxChartView::chartViewType())
+    {
+    root_xmlname = "BoxChartView";
     }
   else if (viewtype == pqXYFunctionalBagChartView::XYFunctionalBagChartViewType())
     {
@@ -299,6 +309,12 @@ pqView* pqStandardViewModules::createView(const QString& viewtype,
     return new pqXYBarChartView(group, viewname,
                                 vtkSMContextViewProxy::SafeDownCast(viewmodule),
                                 server, p);
+    }
+  else if (viewtype == "BoxChartView")
+    {
+    return new pqBoxChartView(group, viewname,
+                              vtkSMContextViewProxy::SafeDownCast(viewmodule),
+                              server, p);
     }
   else if (viewtype == "XYFunctionalBagChartView")
     {

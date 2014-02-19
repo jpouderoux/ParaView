@@ -61,7 +61,6 @@ namespace
         "^Time",
         "^vtkOriginal.*",
         "^vtkValidPointMask",
-        "QMed*",
         NULL
       };
       for (int cc=0; defaults[cc] != NULL; cc++)
@@ -243,8 +242,7 @@ int vtkSMChartSeriesSelectionDomain::ReadXMLAttributes(
   const char* flatten_table = element->GetAttribute("flatten_table");
   if (flatten_table)
     {
-    this->FlattenTable = (strcmp(default_mode, "true") == 0) ||
-      (strcmp(default_mode, "1") == 0);
+    this->FlattenTable = (strcmp(default_mode, "true") == 0);
     }
   return 1;
 }

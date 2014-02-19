@@ -24,6 +24,7 @@
 #include "vtkPVArrayInformation.h"
 #include "vtkPVBagChartView.h"
 #include "vtkPVBarChartView.h"
+#include "vtkPVBoxChartView.h"
 #include "vtkPVCacheKeeper.h"
 #include "vtkPVCacheKeeperPipeline.h"
 #include "vtkPVCacheSizeInformation.h"
@@ -134,6 +135,7 @@ int main(int, char**)
   PRINT_SELF(vtkPVArrayInformation);
   //PRINT_SELF(vtkPVBagChartView);
   //PRINT_SELF(vtkPVBarChartView);
+  //PRINT_SELF(vtkPVBoxChartView);
   PRINT_SELF(vtkPVCacheKeeper);
   PRINT_SELF(vtkPVCacheKeeperPipeline);
   PRINT_SELF(vtkPVCacheSizeInformation);
